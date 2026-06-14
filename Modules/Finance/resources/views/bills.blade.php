@@ -67,6 +67,12 @@
                         <td class="px-4 py-2 text-right space-x-2">
                             @if($b->status !== 'paid')
                             <button onclick="openPayment({{ $b->id }}, {{ $b->remaining() }})" class="text-blue-600 hover:underline text-xs">Bayar</button>
+                            {{-- [2026-06-14 | AG] Tambah tombol Kirim Notif per siswa --}}
+                            <form action="{{ route('finance.reminders') }}" method="POST" class="inline">
+                                @csrf
+                                <input type="hidden" name="bill_ids[]" value="{{ $b->id }}">
+                                <button type="submit" class="text-amber-600 hover:underline text-xs" title="Kirim Pengingat WhatsApp ke Orang Tua">Kirim Notif</button>
+                            </form>
                             @endif
                         </td>
                     </tr>
@@ -95,6 +101,11 @@
             <div>
                 <label class="block text-xs font-medium text-gray-600 mb-1">Nominal (Rp)</label>
                 <input type="number" name="amount" required class="w-full border rounded px-3 py-2">
+            </div>
+            {{-- [2026-06-14 | AG] Tambah checkbox auto-notifikasi WhatsApp ke wali murid --}}
+            <div class="flex items-center gap-2 py-1">
+                <input type="checkbox" name="auto_notify" id="auto_notify" value="1" checked class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                <label for="auto_notify" class="text-xs font-medium text-gray-600 select-none cursor-pointer">Kirim Notifikasi Otomatis ke WhatsApp Orangtua</label>
             </div>
             <div class="flex justify-end gap-2">
                 <button type="button" onclick="document.getElementById('generate-modal').classList.add('hidden')" class="px-3 py-2 rounded border text-sm">Batal</button>

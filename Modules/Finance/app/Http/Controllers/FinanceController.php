@@ -32,7 +32,7 @@ class FinanceController extends Controller
         $bills = $query->paginate(50)->withQueryString();
         $students = Student::select('id', 'name')->get();
 
-        return view('admin.finance.bills', compact('bills', 'students'));
+        return view('finance::bills', compact('bills', 'students'));
     }
 
     public function generateBills(Request $request): RedirectResponse
