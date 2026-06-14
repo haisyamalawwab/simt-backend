@@ -123,4 +123,13 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | WhatsApp Gateway Configuration
+    |--------------------------------------------------------------------------
+    */
+    'wa_gateway_url' => env('WA_GATEWAY_URL', 'http://localhost:8081'),
+    'wa_gateway_api_key' => env('WA_GATEWAY_API_KEY', 'dev-api-key'),
+    'wa_callback_secret' => env('WA_CALLBACK_SECRET', 'dev-callback-secret'),
+
 ];
