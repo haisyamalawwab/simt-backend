@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peta & Visualisasi Seluruh Dokumen — Folder Drive SIMSEKOLAH2026</title>
+<style>
+  :root{--bg:#0f172a;--card:#1e293b;--bd:#334155;--tx:#e2e8f0;--mut:#94a3b8;
+        --p1:#38bdf8;--p2:#a78bfa;--p3:#34d399;--p4:#fbbf24;--p5:#f472b6;--new:#f43f5e}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);padding:30px;line-height:1.45}
+  h1{font-size:24px}
+  .sub{color:var(--mut);font-size:13px;margin:4px 0 22px}
+  h2{font-size:16px;margin:30px 0 12px;padding-left:10px;border-left:4px solid}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:10px}
+  .doc{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:11px 13px;position:relative}
+  .doc b{font-size:12.5px;display:block;margin:3px 0 4px;line-height:1.3}
+  .doc small{color:var(--mut);font-size:11px;display:block}
+  .num{font-size:10px;font-weight:800;padding:1px 8px;border-radius:99px;color:#0f172a;display:inline-block}
+  .aud{position:absolute;top:9px;right:10px;font-size:12px;letter-spacing:1px}
+  .c1{border-top:3px solid var(--p1)} .c1 .num{background:var(--p1)}
+  .c2{border-top:3px solid var(--p2)} .c2 .num{background:var(--p2)}
+  .c3{border-top:3px solid var(--p3)} .c3 .num{background:var(--p3)}
+  .c4{border-top:3px solid var(--p4)} .c4 .num{background:var(--p4)}
+  .c5{border-top:3px solid var(--p5)} .c5 .num{background:var(--p5)}
+  .c6{border-top:3px solid var(--new)} .c6 .num{background:var(--new);color:#fff}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px 16px;font-size:12px}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  svg{width:100%;height:auto;display:block}
+  .panel{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-top:10px}
+  footer{margin-top:36px;color:var(--mut);font-size:12px;border-top:1px solid var(--bd);padding-top:12px}
+</style>
+</head>
+<body>
+
+<h1>🗂️ Peta & Visualisasi Seluruh Dokumen</h1>
+<div class="sub">Doc 43 · Folder Drive <b>!!SIMSEKOLAH2026!!</b> · 43 dokumen master · diperbarui 12 Juni 2026 (Sesi 3)</div>
+
+<div class="legend">
+  <span><span class="dot" style="background:var(--p1)"></span>Fase 1A — Kelayakan & Perencanaan (01–08)</span>
+  <span><span class="dot" style="background:var(--p2)"></span>Fase 1B — Teknik & Operasional (09–20)</span>
+  <span><span class="dot" style="background:var(--p3)"></span>Fase 2A — Pivot Arsitektur SaaS (21–30)</span>
+  <span><span class="dot" style="background:var(--p4)"></span>Fase 2B — Bisnis & Legal (31–36 + Survey)</span>
+  <span><span class="dot" style="background:var(--new)"></span>Fase 3 — MVP Eksekusi BARU (37–43) ★</span>
+  <span style="margin-left:auto">Audiens: 💻 Developer · 🏫 Client · 💼 Investor</span>
+</div>
+
+<!-- ==================== ALUR ANTAR DOKUMEN ==================== -->
+<h2 style="border-color:var(--p1)">A. Peta Alur: Bagaimana Dokumen Saling Terhubung</h2>
+<div class="panel">
+<svg viewBox="0 0 1000 200" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="m" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#64748b"/></marker></defs>
+  <rect x="10" y="55" width="150" height="90" rx="10" fill="#0c4a6e" stroke="#38bdf8"/>
+  <text x="85" y="83" text-anchor="middle" fill="#7dd3fc" font-size="12" font-weight="bold">DOC 01–08</text>
+  <text x="85" y="102" text-anchor="middle" fill="#e0f2fe" font-size="10.5">Kelayakan, Kebutuhan,</text>
+  <text x="85" y="117" text-anchor="middle" fill="#e0f2fe" font-size="10.5">PRD Full, SRS, ERD,</text>
+  <text x="85" y="132" text-anchor="middle" fill="#e0f2fe" font-size="10.5">Roadmap, Charter</text>
+
+  <rect x="215" y="55" width="150" height="90" rx="10" fill="#312e81" stroke="#a78bfa"/>
+  <text x="290" y="83" text-anchor="middle" fill="#c4b5fd" font-size="12" font-weight="bold">DOC 09–20</text>
+  <text x="290" y="102" text-anchor="middle" fill="#ede9fe" font-size="10.5">Arsitektur, Security,</text>
+  <text x="290" y="117" text-anchor="middle" fill="#ede9fe" font-size="10.5">Test, UAT, Deploy, DR,</text>
+  <text x="290" y="132" text-anchor="middle" fill="#ede9fe" font-size="10.5">API, UI/UX, Kickoff</text>
+
+  <rect x="420" y="55" width="150" height="90" rx="10" fill="#064e3b" stroke="#34d399"/>
+  <text x="495" y="83" text-anchor="middle" fill="#6ee7b7" font-size="12" font-weight="bold">DOC 21–30 ⚡PIVOT</text>
+  <text x="495" y="102" text-anchor="middle" fill="#d1fae5" font-size="10.5">Multi-Tenant, Modular,</text>
+  <text x="495" y="117" text-anchor="middle" fill="#d1fae5" font-size="10.5">Hybrid Blade+Next.js,</text>
+  <text x="495" y="132" text-anchor="middle" fill="#d1fae5" font-size="10.5">RBAC Teams, PayGW</text>
+
+  <rect x="625" y="55" width="150" height="90" rx="10" fill="#451a03" stroke="#fbbf24"/>
+  <text x="700" y="83" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="bold">DOC 31–36 💰</text>
+  <text x="700" y="102" text-anchor="middle" fill="#fef3c7" font-size="10.5">SWOT, Pricing B2B2C,</text>
+  <text x="700" y="117" text-anchor="middle" fill="#fef3c7" font-size="10.5">Survival Plan, Pitching,</text>
+  <text x="700" y="132" text-anchor="middle" fill="#fef3c7" font-size="10.5">Max-Profit, MoU Legal</text>
+
+  <rect x="830" y="45" width="160" height="110" rx="10" fill="#4c0519" stroke="#f43f5e" stroke-width="2"/>
+  <text x="910" y="73" text-anchor="middle" fill="#fda4af" font-size="12" font-weight="bold">DOC 37–43 ★ BARU</text>
+  <text x="910" y="92" text-anchor="middle" fill="#ffe4e6" font-size="10.5">PRD MVP 3 Bln / 5 Jt,</text>
+  <text x="910" y="107" text-anchor="middle" fill="#ffe4e6" font-size="10.5">SRS MVP, Design MVP,</text>
+  <text x="910" y="122" text-anchor="middle" fill="#ffe4e6" font-size="10.5">Task 6 Sprint, Visual</text>
+  <text x="910" y="137" text-anchor="middle" fill="#ffe4e6" font-size="10.5">Konsep, Diagram Proses</text>
+
+  <line x1="160" y1="100" x2="208" y2="100" stroke="#64748b" stroke-width="2" marker-end="url(#m)"/>
+  <line x1="365" y1="100" x2="413" y2="100" stroke="#64748b" stroke-width="2" marker-end="url(#m)"/>
+  <line x1="570" y1="100" x2="618" y2="100" stroke="#64748b" stroke-width="2" marker-end="url(#m)"/>
+  <line x1="775" y1="100" x2="823" y2="100" stroke="#f43f5e" stroke-width="2.5" marker-end="url(#m)"/>
+  <text x="85" y="35" text-anchor="middle" fill="#94a3b8" font-size="10">SESI 1 · Perencanaan</text>
+  <text x="290" y="35" text-anchor="middle" fill="#94a3b8" font-size="10">SESI 1 · Teknik</text>
+  <text x="495" y="35" text-anchor="middle" fill="#94a3b8" font-size="10">SESI 2 · Engineering Pivot</text>
+  <text x="700" y="35" text-anchor="middle" fill="#94a3b8" font-size="10">SESI 2 · Financial+Legal Pivot</text>
+  <text x="910" y="30" text-anchor="middle" fill="#fda4af" font-size="10" font-weight="bold">SESI 3 · FASE EKSEKUSI (hari ini)</text>
+  <text x="500" y="185" text-anchor="middle" fill="#64748b" font-size="11">Distribusi ZIP: 📦 package_developer (Doc 03–19, 21–30) · 📦 package_client (02, 04, 12, 14–16, 36) · 📦 package_investor (01, 08, 20, 31–35, Survey)</text>
+</svg>
+</div>
+
+<!-- ==================== FASE 1A ==================== -->
+<h2 style="border-color:var(--p1)">B. Fase 1A — Kelayakan & Perencanaan (Doc 01–08)</h2>
+<div class="grid">
+  <div class="doc c1"><span class="num">01</span><span class="aud">💼</span><b>Analisis Kelayakan Proyek</b><small>Feasibility 5 dimensi (teknis, ekonomi, legal, operasional, jadwal). 742 baris.</small></div>
+  <div class="doc c1"><span class="num">02</span><span class="aud">🏫</span><b>Analisis Kebutuhan</b><small>Kebutuhan 11 stakeholder madrasah, pain-points TU/guru/ortu. 1.060 baris.</small></div>
+  <div class="doc c1"><span class="num">03</span><span class="aud">💻</span><b>Pemetaan Modul & RBAC</b><small>13 modul ERP × matriks role-permission awal. 981 baris.</small></div>
+  <div class="doc c1"><span class="num">04</span><span class="aud">💻🏫</span><b>PRD Full (SIMT MTs)</b><small>Visi produk 18 bulan, diferensiator Tahfiz & Inklusi, EMIS/DAPODIK. 1.222 baris.</small></div>
+  <div class="doc c1"><span class="num">05</span><span class="aud">💻</span><b>SRS (Requirements)</b><small>Spesifikasi fungsional & non-fungsional lengkap 13 modul. 1.333 baris.</small></div>
+  <div class="doc c1"><span class="num">06</span><span class="aud">💻</span><b>Design System & ERD</b><small>Arsitektur sistem + skema database penuh. 1.559 baris (terbesar).</small></div>
+  <div class="doc c1"><span class="num">07</span><span class="aud">💻</span><b>Roadmap, Task & Sprint</b><small>Perencanaan sprint versi full-ERP. 1.187 baris.</small></div>
+  <div class="doc c1"><span class="num">08</span><span class="aud">💼</span><b>Project Charter</b><small>Mandat proyek, stakeholder, batasan, otoritas. 656 baris.</small></div>
+</div>
+
+<!-- ==================== FASE 1B ==================== -->
+<h2 style="border-color:var(--p2)">C. Fase 1B — Teknik & Operasional (Doc 09–20)</h2>
+<div class="grid">
+  <div class="doc c2"><span class="num">09</span><span class="aud">💻</span><b>Software Architecture (SAD)</b><small>Arsitektur perangkat lunak menyeluruh. 1.296 baris.</small></div>
+  <div class="doc c2"><span class="num">10</span><span class="aud">💻</span><b>Security Plan</b><small>Rencana keamanan: auth, enkripsi, audit.</small></div>
+  <div class="doc c2"><span class="num">11</span><span class="aud">💻</span><b>Test Strategy</b><small>Strategi pengujian unit/integrasi/E2E.</small></div>
+  <div class="doc c2"><span class="num">12</span><span class="aud">🏫</span><b>UAT Plan</b><small>Skenario uji penerimaan oleh sekolah.</small></div>
+  <div class="doc c2"><span class="num">13</span><span class="aud">💻</span><b>Deployment Plan</b><small>Rencana rilis & deployment VPS.</small></div>
+  <div class="doc c2"><span class="num">14</span><span class="aud">🏫</span><b>User Manual</b><small>Panduan pengguna per role.</small></div>
+  <div class="doc c2"><span class="num">15</span><span class="aud">🏫</span><b>Disaster Recovery Plan</b><small>Backup, restore, RTO/RPO.</small></div>
+  <div class="doc c2"><span class="num">16</span><span class="aud">🏫</span><b>Operations Manual</b><small>Panduan operasional harian sistem.</small></div>
+  <div class="doc c2"><span class="num">17</span><span class="aud">💻</span><b>API Contract Design</b><small>Kontrak endpoint REST, format envelope.</small></div>
+  <div class="doc c2"><span class="num">18</span><span class="aud">💻</span><b>Developer Guidelines</b><small>Konvensi kode & alur kerja Git.</small></div>
+  <div class="doc c2"><span class="num">19</span><span class="aud">💻</span><b>UI/UX Screen Flow</b><small>Spesifikasi alur layar antarmuka.</small></div>
+  <div class="doc c2"><span class="num">20</span><span class="aud">💼</span><b>Slide Deck Kickoff</b><small>Materi presentasi kick-off meeting.</small></div>
+</div>
+
+<!-- ==================== FASE 2A ==================== -->
+<h2 style="border-color:var(--p3)">D. Fase 2A — Pivot Arsitektur Micro SaaS (Doc 21–30)</h2>
+<div class="grid">
+  <div class="doc c3"><span class="num">21</span><span class="aud">💻</span><b>Blueprint Multi-Tenant & Modular</b><small>Single-DB multi-tenant + konsep modular. Fondasi pivot.</small></div>
+  <div class="doc c3"><span class="num">22</span><span class="aud">💻</span><b>API Driven & RBAC Multi-Tenant</b><small>Implementasi Sanctum + Spatie Teams per tenant.</small></div>
+  <div class="doc c3"><span class="num">23</span><span class="aud">💻</span><b>Dev Execution Roadmap</b><small>"Cheat sheet" hari-demi-hari setup Laravel + nwidart.</small></div>
+  <div class="doc c3"><span class="num">24</span><span class="aud">💻</span><b>Arsitektur Hybrid Blade + Next.js</b><small>Keputusan membuang full-SPA; Blade utk admin, Next.js utk ortu.</small></div>
+  <div class="doc c3"><span class="num">25</span><span class="aud">💻</span><b>Frontend Admin Blade Modular</b><small>Standar komponen Blade reusable.</small></div>
+  <div class="doc c3"><span class="num">26</span><span class="aud">💻</span><b>Frontend Next.js Parent Portal</b><small>Standar UI headless portal orang tua.</small></div>
+  <div class="doc c3"><span class="num">27</span><span class="aud">💻</span><b>RBAC Deep Analysis</b><small>Kasus "Guru Ahmad": role beda per sekolah (team_id).</small></div>
+  <div class="doc c3"><span class="num">28</span><span class="aud">💻</span><b>Modular MVC Plug & Play</b><small>Desain modul mandiri + I/O API; fitur otomatis tersembunyi.</small></div>
+  <div class="doc c3"><span class="num">29</span><span class="aud">💻</span><b>API General vs Plugins</b><small>Kontrak API gateway modul inti vs add-on.</small></div>
+  <div class="doc c3"><span class="num">30</span><span class="aud">💻</span><b>Payment Gateway (BYOA)</b><small>Midtrans/Xendit milik sekolah; markup Rp 1.500/transaksi.</small></div>
+</div>
+
+<!-- ==================== FASE 2B ==================== -->
+<h2 style="border-color:var(--p4)">E. Fase 2B — Strategi Bisnis & Legal (Doc 31–36 + Survey)</h2>
+<div class="grid">
+  <div class="doc c4"><span class="num">31</span><span class="aud">💼</span><b>SWOT Micro SaaS</b><small>Analisis kritis pivot dari ERP ke Micro SaaS Plug & Play.</small></div>
+  <div class="doc c4"><span class="num">32</span><span class="aud">💼</span><b>Pricing B2B2C & ROI</b><small>Rp 2.000/siswa/bulan + setup Rp 1 jt; minimum Rp 200rb/bln.</small></div>
+  <div class="doc c4"><span class="num">33</span><span class="aud">💼</span><b>Survival Plan (Pesimis)</b><small>Worst-case: cara bertahan jika hanya 1–2 sekolah deal.</small></div>
+  <div class="doc c4"><span class="num">34</span><span class="aud">💼</span><b>Strategi Pitching Hybrid</b><small>Skrip negosiasi harga ke kepala sekolah.</small></div>
+  <div class="doc c4"><span class="num">35</span><span class="aud">💼</span><b>Max-Profit & Arus Kas</b><small>5 sekolah × 100 siswa → +Rp 11 jt bulan 1 → BEP.</small></div>
+  <div class="doc c4"><span class="num">36</span><span class="aud">🏫💼</span><b>Draft MoU Kerjasama SaaS</b><small>Anti scope-creep, liabilitas WA-ban, anti-hostage data, tarif jasa.</small></div>
+  <div class="doc c4"><span class="num">SV</span><span class="aud">💼</span><b>Survey & Market Check</b><small>Validasi pasar madrasah swasta. 586 baris.</small></div>
+</div>
+
+<!-- ==================== FASE 3 BARU ==================== -->
+<h2 style="border-color:var(--new)">F. ★ Fase 3 — Paket MVP Eksekusi (Doc 37–43 · BARU Sesi Ini)</h2>
+<div class="grid">
+  <div class="doc c6"><span class="num">37</span><span class="aud">💻🏫💼</span><b>PRD MVP 3 Bulan / Rp 5 Juta</b><small>Scope 4 modul, budget plan terkunci, success metrics, BEP bulan-3.</small></div>
+  <div class="doc c6"><span class="num">38</span><span class="aud">💻</span><b>Requirements (SRS MVP)</b><small>FR/NFR berprioritas P0–P2 + 4 acceptance gate UAT.</small></div>
+  <div class="doc c6"><span class="num">39</span><span class="aud">💻</span><b>Design MVP</b><small>Arsitektur 2-VPS, ERD 12 tabel, kontrak API, UI flow, sequence WA.</small></div>
+  <div class="doc c6"><span class="num">40</span><span class="aud">💻</span><b>Task Breakdown 6 Sprint</b><small>278 jam terjadwal, gate per sprint, exit criteria hari-90.</small></div>
+  <div class="doc c6"><span class="num">41</span><span class="aud">💼🏫</span><b>Visualisasi Konsep (HTML)</b><small>Infografis B2B2C, arsitektur, budget, BEP, moat — siap pitching.</small></div>
+  <div class="doc c6"><span class="num">42</span><span class="aud">💻🏫</span><b>Diagram Proses (Mermaid)</b><small>8 diagram: akuisisi, presensi→WA, SPP, onboarding, state tenant, isolasi, insiden, Gantt.</small></div>
+  <div class="doc c6"><span class="num">43</span><span class="aud">📂</span><b>Peta Dokumen Drive (ini)</b><small>Indeks visual seluruh 43 dokumen + relasi & audiens.</small></div>
+</div>
+
+<!-- ==================== STAT ==================== -->
+<h2 style="border-color:var(--mut)">G. Statistik Repositori Dokumen</h2>
+<div class="panel" style="display:flex;gap:30px;flex-wrap:wrap;font-size:13px">
+  <div><div style="font-size:26px;font-weight:800;color:var(--p1)">43</div><span style="color:var(--mut)">Total dokumen master</span></div>
+  <div><div style="font-size:26px;font-weight:800;color:var(--p3)">7</div><span style="color:var(--mut)">Dokumen baru sesi ini (37–43)</span></div>
+  <div><div style="font-size:26px;font-weight:800;color:var(--p4)">3</div><span style="color:var(--mut)">Paket distribusi (Dev/Client/Investor)</span></div>
+  <div><div style="font-size:26px;font-weight:800;color:var(--p5)">4</div><span style="color:var(--mut)">Modul MVP (dari 13 modul full)</span></div>
+  <div><div style="font-size:26px;font-weight:800;color:var(--new)">90</div><span style="color:var(--mut)">Hari menuju Go-Live & BEP</span></div>
+</div>
+
+<footer>Doc 43 — Peta & Visualisasi Dokumen · Proyek SIMT MTs · Sesi 3 (Fase Eksekusi) · 12 Juni 2026 · Sumber: clone Google Drive !!SIMSEKOLAH2026!!</footer>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
