@@ -11,5 +11,6 @@ Route::middleware(['auth', SetTenantFromUser::class, 'module.active:Finance'])->
     Route::post('/finance/bills/generate', [FinanceController::class, 'generateBills'])->name('finance.bills.generate');
     Route::post('/bills/{bill}/payment', [FinanceController::class, 'recordPayment'])->name('finance.payment.store');
     Route::get('/payments/{payment}/receipt', [FinanceController::class, 'printReceipt'])->name('finance.receipt');
+    Route::get('/finance/bills/export', [FinanceController::class, 'exportBills'])->name('finance.bills.export');
     Route::post('/finance/reminders', [FinanceController::class, 'sendReminders'])->name('finance.reminders');
 });

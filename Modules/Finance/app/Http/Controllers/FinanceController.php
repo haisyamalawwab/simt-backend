@@ -12,6 +12,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use Modules\Finance\Exports\BillsRecapExport;
 
 class FinanceController extends Controller
 {
@@ -169,6 +171,12 @@ class FinanceController extends Controller
         }
 
         return redirect()->route('finance.bills')->with('success', "{$queued} pengingat WA diantrikan.");
+    }
+
+    public function exportBills(Request $request)
+    {
+        $filters = $request->only(['period', 'status', 'student_id']);
+        return Excel::download(new BillsRecapExport($filters), 'rekap_tagihan.xlsx');
     }
 
     private function generateReceiptNo(int $tenantId): string

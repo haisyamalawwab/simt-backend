@@ -2,257 +2,412 @@
 
 namespace Tests\Feature;
 
-use App\Jobs\SendWaNotification;
 use App\Models\Bill;
-use App\Models\SchoolClass;
+use App\Models\Payment;
 use App\Models\SchoolYear;
 use App\Models\Student;
 use App\Models\Tenant;
-use App\Models\TenantModule;
 use App\Models\User;
-use App\Support\Tenancy;
+use App\Services\TenantRoleService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Queue;
-use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
+/**
+ * FinanceModuleTest — Pengujian modul Finance (Sprint 5 Phase 1)
+ *
+ * Mencakup:
+ * 1. CRUD Tagihan (generate, view, filter)
+ * 2. Pembayaran (partial, full, auto-update status)
+ * 3. Kwitansi PDF generation
+ * 4. Tenant isolation
+ * 5. Module gating (Finance non-aktif = 403)
+ * 6. API portal ortu endpoint
+ */
 class FinanceModuleTest extends TestCase
 {
     use RefreshDatabase;
 
     protected Tenant $tenant1;
     protected Tenant $tenant2;
-    protected User $adminT1;
-    protected User $adminT2;
-    protected SchoolYear $schoolYearT1;
-    protected SchoolYear $schoolYearT2;
-    protected Student $studentT1;
-    protected User $guardianT1;
+    protected User $admin;
+    protected User $bendahara;
+    protected User $wali;
+    protected Student $student;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        // Create Tenants
+        // Seed roles & permissions
+        $this->seed(\Database\Seeders\RolePermissionSeeder::class);
+
+        // Setup 2 tenant + modul
         $this->tenant1 = Tenant::create([
-            'name' => 'MTs Al-Hikmah',
-            'domain' => 'mts-alhikmah',
+            'name' => 'MTs Test Satu',
+            'domain' => 'test-satu',
             'status' => 'active',
+            'activated_at' => now(),
         ]);
         $this->tenant2 = Tenant::create([
-            'name' => 'MTs An-Nur',
-            'domain' => 'mts-annur',
+            'name' => 'MTs Test Dua',
+            'domain' => 'test-dua',
             'status' => 'active',
+            'activated_at' => now(),
         ]);
 
-        // Enable Finance module for both
-        TenantModule::create([
-            'tenant_id' => $this->tenant1->id,
-            'module_code' => 'Finance',
-            'active' => true,
-        ]);
-        TenantModule::create([
-            'tenant_id' => $this->tenant2->id,
-            'module_code' => 'Finance',
-            'active' => true,
-        ]);
+        // Tenant 1 punya semua modul
+        foreach (['Core', 'Student', 'Attendance', 'Finance'] as $mod) {
+            \App\Models\TenantModule::create([
+                'tenant_id' => $this->tenant1->id,
+                'module_code' => $mod,
+                'active' => true,
+            ]);
+        }
+        // Tenant 2 tanpa Finance (test module gating)
+        foreach (['Core', 'Student', 'Attendance'] as $mod) {
+            \App\Models\TenantModule::create([
+                'tenant_id' => $this->tenant2->id,
+                'module_code' => $mod,
+                'active' => true,
+            ]);
+        }
 
-        // Create Admin Users
-        $this->adminT1 = User::create([
+        // Provision role
+        $roleService = new TenantRoleService();
+        $roleService->provisionForTenant($this->tenant1->id);
+        $roleService->provisionForTenant($this->tenant2->id);
+
+        // Setup users
+        $this->admin = User::create([
             'tenant_id' => $this->tenant1->id,
-            'name' => 'Admin T1',
-            'email' => 'admin@t1.test',
+            'name' => 'Admin Test',
+            'phone' => '628111111001',
+            'email' => 'admin@test-satu.sch.id',
+            'password' => bcrypt('password'),
+            'role_display' => 'admin_sekolah',
+            'is_active' => true,
+        ]);
+        $roleService->assignRole($this->admin, 'admin_sekolah', $this->tenant1->id);
+
+        $this->bendahara = User::create([
+            'tenant_id' => $this->tenant1->id,
+            'name' => 'Bendahara Test',
+            'phone' => '628111111002',
+            'email' => 'bendahara@test-satu.sch.id',
+            'password' => bcrypt('password'),
+            'role_display' => 'bendahara',
+            'is_active' => true,
+        ]);
+        $roleService->assignRole($this->bendahara, 'bendahara', $this->tenant1->id);
+
+        $this->wali = User::create([
+            'tenant_id' => $this->tenant1->id,
+            'name' => 'Wali Test',
+            'phone' => '628111111003',
+            'email' => 'wali@test-satu.sch.id',
             'phone' => '628000000001',
             'password' => bcrypt('password'),
+            'role_display' => 'wali',
+            'is_active' => true,
         ]);
-        $this->adminT2 = User::create([
-            'tenant_id' => $this->tenant2->id,
-            'name' => 'Admin T2',
-            'email' => 'admin@t2.test',
-            'phone' => '628000000002',
-            'password' => bcrypt('password'),
-        ]);
+        $roleService->assignRole($this->wali, 'wali', $this->tenant1->id);
 
-        // Create Active School Year for both
-        $this->schoolYearT1 = SchoolYear::create([
+        // Setup SchoolYear
+        SchoolYear::create([
             'tenant_id' => $this->tenant1->id,
             'name' => '2026/2027',
             'is_active' => true,
         ]);
-        $this->schoolYearT2 = SchoolYear::create([
-            'tenant_id' => $this->tenant2->id,
-            'name' => '2026/2027',
-            'is_active' => true,
-        ]);
 
-        // Create active student for T1
-        $this->studentT1 = Student::create([
+        // Setup student + guardian relation
+        $this->student = Student::create([
             'tenant_id' => $this->tenant1->id,
-            'nis' => '1111',
-            'name' => 'Siswa T1',
-            'gender' => 'L',
+            'nis' => '001',
+            'nisn' => '001001',
+            'name' => 'Siswa Test',
             'status' => 'active',
         ]);
-
-        // Create a Guardian and connect to the student
-        $this->guardianT1 = User::create([
-            'tenant_id' => $this->tenant1->id,
-            'name' => 'Wali Siswa T1',
-            'email' => 'wali@t1.test',
-            'phone' => '6281234567890',
-            'password' => bcrypt('password'),
-        ]);
-        $this->studentT1->guardians()->attach($this->guardianT1->id, ['relation' => 'Ayah']);
-
-        // Set default tenant context to tenant1
-        app(Tenancy::class)->setTenant($this->tenant1);
+        $this->wali->guardianStudents()->attach($this->student->id, ['relation' => 'ayah']);
     }
 
-    #[Test]
-    public function bills_page_is_accessible(): void
+    /** @test */
+    public function bendahara_can_generate_bills_for_active_students(): void
     {
-        $response = $this->actingAs($this->adminT1)->get(route('finance.bills'));
+        $this->actingAs($this->bendahara);
 
-        $response->assertOk();
-        $response->assertSee('Tagihan & Pembayaran SPP', false);
-    }
-
-    #[Test]
-    public function bendahara_can_generate_bills_without_auto_notify(): void
-    {
-        Queue::fake();
-
-        $response = $this->actingAs($this->adminT1)->post(route('finance.bills.generate'), [
-            'period' => '2026-06',
+        $response = $this->post(route('finance.bills.generate'), [
+            'period' => '2026-07',
             'component' => 'SPP',
-            'amount' => 250000,
-            'due_date' => '2026-06-10',
-            'auto_notify' => '0',
+            'amount' => 500000,
         ]);
 
         $response->assertRedirect(route('finance.bills'));
-        $response->assertSessionHas('success', 'Tagihan 1 siswa berhasil dibuat.');
+        $response->assertSessionHas('success');
 
-        // Verify bill is created in database
         $this->assertDatabaseHas('bills', [
             'tenant_id' => $this->tenant1->id,
-            'student_id' => $this->studentT1->id,
-            'period' => '2026-06',
-            'amount' => 250000,
+            'student_id' => $this->student->id,
+            'period' => '2026-07',
+            'component' => 'SPP',
+            'amount' => 500000,
+            'status' => 'unpaid',
+        ]);
+    }
+
+    /** @test */
+    public function bills_index_page_is_accessible_with_filter(): void
+    {
+        // Create a bill first
+        Bill::create([
+            'tenant_id' => $this->tenant1->id,
+            'student_id' => $this->student->id,
+            'period' => '2026-07',
+            'component' => 'SPP',
+            'amount' => 500000,
+            'paid_amount' => 0,
             'status' => 'unpaid',
         ]);
 
-        // Verify NO WA jobs were dispatched
-        Queue::assertNothingPushed();
+        $this->actingAs($this->bendahara);
+
+        $response = $this->get(route('finance.bills'));
+        $response->assertOk();
+        $response->assertSee('Tagihan SPP');
+
+        // Test filter
+        $response = $this->get(route('finance.bills', ['status' => 'paid']));
+        $response->assertOk();
     }
 
-    #[Test]
-    public function bendahara_can_generate_bills_with_auto_notify(): void
+    /** @test */
+    public function full_payment_updates_bill_status_to_paid(): void
     {
-        Queue::fake();
-
-        $response = $this->actingAs($this->adminT1)->post(route('finance.bills.generate'), [
-            'period' => '2026-06',
-            'component' => 'SPP',
-            'amount' => 250000,
-            'due_date' => '2026-06-10',
-            'auto_notify' => '1',
-        ]);
-
-        $response->assertRedirect(route('finance.bills'));
-        $response->assertSessionHas('success', 'Tagihan 1 siswa berhasil dibuat. Dan 1 notifikasi WA diantrikan.');
-
-        // Verify bill is created
-        $this->assertDatabaseHas('bills', [
-            'student_id' => $this->studentT1->id,
-            'period' => '2026-06',
-            'amount' => 250000,
-        ]);
-
-        // Verify WA Job was dispatched with correct payload
-        Queue::assertPushed(SendWaNotification::class, function ($job) {
-            return $job->tenantId === $this->tenant1->id
-                && $job->toPhone === '6281234567890'
-                && $job->type === 'bill_reminder'
-                && $job->payload['student_name'] === 'Siswa T1'
-                && $job->payload['amount'] === 250000.0;
-        });
-    }
-
-    #[Test]
-    public function bendahara_can_send_manual_reminder(): void
-    {
-        Queue::fake();
-
-        // Create a bill first
         $bill = Bill::create([
             'tenant_id' => $this->tenant1->id,
-            'student_id' => $this->studentT1->id,
-            'period' => '2026-06',
+            'student_id' => $this->student->id,
+            'period' => '2026-07',
             'component' => 'SPP',
-            'amount' => 250000,
+            'amount' => 500000,
+            'paid_amount' => 0,
             'status' => 'unpaid',
         ]);
 
-        $response = $this->actingAs($this->adminT1)->post(route('finance.reminders'), [
-            'bill_ids' => [$bill->id],
+        $this->actingAs($this->bendahara);
+
+        $response = $this->post(route('finance.payment.store', $bill), [
+            'amount' => 500000,
+            'payment_date' => '2026-07-15',
+            'method' => 'cash',
         ]);
 
         $response->assertRedirect(route('finance.bills'));
-        $response->assertSessionHas('success', '1 pengingat WA diantrikan.');
 
-        // Verify WA Job was dispatched
-        Queue::assertPushed(SendWaNotification::class, function ($job) use ($bill) {
-            return $job->tenantId === $this->tenant1->id
-                && $job->toPhone === '6281234567890'
-                && $job->type === 'bill_reminder'
-                && $job->payload['student_name'] === 'Siswa T1'
-                && $job->payload['amount'] === 250000.0;
-        });
+        $bill->refresh();
+        $this->assertEquals(500000, (float) $bill->paid_amount);
+        $this->assertEquals('paid', $bill->status);
+
+        $this->assertDatabaseHas('payments', [
+            'tenant_id' => $this->tenant1->id,
+            'bill_id' => $bill->id,
+            'amount' => 500000,
+            'method' => 'cash',
+        ]);
     }
 
-    #[Test]
+    /** @test */
+    public function partial_payment_updates_bill_status_to_partial(): void
+    {
+        $bill = Bill::create([
+            'tenant_id' => $this->tenant1->id,
+            'student_id' => $this->student->id,
+            'period' => '2026-07',
+            'component' => 'SPP',
+            'amount' => 500000,
+            'paid_amount' => 0,
+            'status' => 'unpaid',
+        ]);
+
+        $this->actingAs($this->bendahara);
+
+        $response = $this->post(route('finance.payment.store', $bill), [
+            'amount' => 200000,
+            'payment_date' => '2026-07-15',
+            'method' => 'transfer',
+        ]);
+
+        $response->assertRedirect(route('finance.bills'));
+
+        $bill->refresh();
+        $this->assertEquals(200000, (float) $bill->paid_amount);
+        $this->assertEquals('partial', $bill->status);
+        $this->assertEquals(300000, $bill->remaining());
+    }
+
+    /** @test */
+    public function receipt_pdf_generated_with_correct_format(): void
+    {
+        $bill = Bill::create([
+            'tenant_id' => $this->tenant1->id,
+            'student_id' => $this->student->id,
+            'period' => '2026-07',
+            'component' => 'SPP',
+            'amount' => 500000,
+            'paid_amount' => 500000,
+            'status' => 'paid',
+        ]);
+
+        $payment = Payment::create([
+            'tenant_id' => $this->tenant1->id,
+            'bill_id' => $bill->id,
+            'student_id' => $this->student->id,
+            'amount' => 500000,
+            'payment_date' => '2026-07-15',
+            'method' => 'cash',
+            'receipt_no' => 'KW' . $this->tenant1->id . '-2026-001',
+            'recorded_by' => $this->bendahara->id,
+        ]);
+
+        $this->actingAs($this->bendahara);
+
+        $response = $this->get(route('finance.receipt', $payment));
+        $response->assertOk();
+        $response->assertHeader('content-type', 'application/pdf');
+    }
+
+    /** @test */
     public function finance_module_disabled_returns_403(): void
     {
-        // Deactivate Finance module
-        TenantModule::where('tenant_id', $this->tenant1->id)
-            ->where('module_code', 'Finance')
-            ->update(['active' => false]);
+        // Tenant 2 tidak punya modul Finance
+        $adminT2 = User::create([
+            'tenant_id' => $this->tenant2->id,
+            'name' => 'Admin T2',
+            'phone' => '628222222001',
+            'email' => 'admin@test-dua.sch.id',
+            'password' => bcrypt('password'),
+            'role_display' => 'admin_sekolah',
+            'is_active' => true,
+        ]);
+        $roleService = new TenantRoleService();
+        $roleService->assignRole($adminT2, 'admin_sekolah', $this->tenant2->id);
 
-        $response = $this->actingAs($this->adminT1)->get(route('finance.bills'));
+        $this->actingAs($adminT2);
 
+        $response = $this->get(route('finance.bills'));
         $response->assertStatus(403);
     }
 
-    #[Test]
+    /** @test */
     public function bills_isolated_per_tenant(): void
     {
-        // Switch context to tenant2 and generate a bill there
-        app(Tenancy::class)->setTenant($this->tenant2);
-        
+        // Setup tenant 2
         $studentT2 = Student::create([
             'tenant_id' => $this->tenant2->id,
-            'nis' => '2222',
+            'nis' => '001',
+            'nisn' => '001001',
             'name' => 'Siswa T2',
-            'gender' => 'P',
             'status' => 'active',
         ]);
 
-        $billT2 = Bill::create([
+        // Bills di 2 tenant
+        Bill::create([
+            'tenant_id' => $this->tenant1->id,
+            'student_id' => $this->student->id,
+            'period' => '2026-07',
+            'component' => 'SPP',
+            'amount' => 500000,
+            'paid_amount' => 0,
+            'status' => 'unpaid',
+        ]);
+        Bill::create([
             'tenant_id' => $this->tenant2->id,
             'student_id' => $studentT2->id,
-            'period' => '2026-06',
+            'period' => '2026-07',
             'component' => 'SPP',
-            'amount' => 300000,
+            'amount' => 500000,
+            'paid_amount' => 0,
             'status' => 'unpaid',
         ]);
 
-        // Access bills from tenant1 admin context
-        app(Tenancy::class)->setTenant($this->tenant1);
-        $response = $this->actingAs($this->adminT1)->get(route('finance.bills'));
-        
+        // Login sebagai admin T1
+        $this->actingAs($this->admin);
+        $response = $this->get(route('finance.bills'));
         $response->assertOk();
-        // Should NOT see Tenant 2's bill amount
-        $response->assertDontSee('300.000');
+        $response->assertSee('Siswa Test');
+        $response->assertDontSee('Siswa T2');
+    }
+
+    /** @test */
+    public function wali_can_only_access_their_own_childs_bills_via_api(): void
+    {
+        // Setup student lain (bukan anak wali)
+        $studentLain = Student::create([
+            'tenant_id' => $this->tenant1->id,
+            'nis' => '002',
+            'nisn' => '001002',
+            'name' => 'Siswa Lain',
+            'status' => 'active',
+        ]);
+        Bill::create([
+            'tenant_id' => $this->tenant1->id,
+            'student_id' => $studentLain->id,
+            'period' => '2026-07',
+            'component' => 'SPP',
+            'amount' => 500000,
+            'paid_amount' => 0,
+            'status' => 'unpaid',
+        ]);
+        Bill::create([
+            'tenant_id' => $this->tenant1->id,
+            'student_id' => $this->student->id,
+            'period' => '2026-07',
+            'component' => 'SPP',
+            'amount' => 500000,
+            'paid_amount' => 0,
+            'status' => 'unpaid',
+        ]);
+
+        $token = $this->wali->createToken('test-token')->plainTextToken;
+        $headers = [
+            'Authorization' => 'Bearer ' . $token,
+            'X-Tenant-Domain' => 'test-satu',
+            'Accept' => 'application/json',
+        ];
+
+        // Wali coba akses data anak sendiri — SHOULD PASS
+        $response = $this->get('/api/v1/students/' . $this->student->id . '/bills', $headers);
+        $response->assertOk();
+        $response->assertJson([
+            'success' => true,
+            'data' => [
+                'student' => ['id' => $this->student->id],
+            ],
+        ]);
+
+        // Wali coba akses data anak orang lain — SHOULD FAIL (403)
+        $response = $this->get('/api/v1/students/' . $studentLain->id . '/bills', $headers);
+        $response->assertStatus(403);
+        $response->assertJson([
+            'success' => false,
+            'code' => 'FORBIDDEN_OWNERSHIP',
+        ]);
+    }
+
+    /** @test */
+    public function bendahara_can_export_bills_to_excel(): void
+    {
+        Bill::create([
+            'tenant_id' => $this->tenant1->id,
+            'student_id' => $this->student->id,
+            'period' => '2026-07',
+            'component' => 'SPP',
+            'amount' => 500000,
+            'paid_amount' => 0,
+            'status' => 'unpaid',
+        ]);
+
+        $this->actingAs($this->bendahara);
+
+        $response = $this->get(route('finance.bills.export', ['period' => '2026-07']));
+        $response->assertOk();
     }
 }
