@@ -5,7 +5,7 @@ use Modules\Student\Http\Controllers\StudentController;
 use App\Http\Middleware\IdentifyTenant;
 use App\Http\Middleware\SetTenantFromUser;
 
-Route::middleware(['auth', IdentifyTenant::class, SetTenantFromUser::class, 'module.active:Student'])->group(function () {
+Route::middleware(['auth', SetTenantFromUser::class, 'module.active:Student'])->group(function () {
     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
     Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
     Route::post('/students', [StudentController::class, 'store'])->name('students.store');

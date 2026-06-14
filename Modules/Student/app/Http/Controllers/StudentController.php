@@ -41,15 +41,16 @@ class StudentController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $tenantId = app(\App\Support\Tenancy::class)->tenantId();
         $request->validate([
             'name' => 'required|string|max:255',
-            'nis' => 'nullable|string|max:50',
-            'nisn' => 'nullable|string|max:50',
+            'nis' => ['nullable', 'string', 'max:50', \Illuminate\Validation\Rule::unique('students', 'nis')->where('tenant_id', $tenantId)],
+            'nisn' => ['nullable', 'string', 'max:50', \Illuminate\Validation\Rule::unique('students', 'nisn')->where('tenant_id', $tenantId)],
             'gender' => 'nullable|in:L,P',
             'birth_date' => 'nullable|date',
             'birth_place' => 'nullable|string|max:100',
             'address' => 'nullable|string',
-            'class_id' => 'nullable|exists:classes,id',
+            'class_id' => 'nullable|exists:school_classes,id',
             'guardian_phone' => 'nullable|string|max:20',
             'guardian_name' => 'nullable|string|max:255',
         ]);
@@ -92,10 +93,11 @@ class StudentController extends Controller
 
     public function update(Request $request, Student $student): RedirectResponse
     {
+        $tenantId = app(\App\Support\Tenancy::class)->tenantId();
         $request->validate([
             'name' => 'required|string|max:255',
-            'nis' => 'nullable|string|max:50',
-            'nisn' => 'nullable|string|max:50',
+            'nis' => ['nullable', 'string', 'max:50', \Illuminate\Validation\Rule::unique('students', 'nis')->where('tenant_id', $tenantId)->ignore($student->id)],
+            'nisn' => ['nullable', 'string', 'max:50', \Illuminate\Validation\Rule::unique('students', 'nisn')->where('tenant_id', $tenantId)->ignore($student->id)],
             'gender' => 'nullable|in:L,P',
             'birth_date' => 'nullable|date',
             'birth_place' => 'nullable|string|max:100',
