@@ -184,4 +184,24 @@ class AttendanceModuleTest extends TestCase
         app(Tenancy::class)->setTenant($this->tenant);
         $this->assertCount(1, Attendance::all());
     }
+
+    #[Test]
+    public function monthly_recap_export_is_accessible(): void
+    {
+        $this->actingAs($this->guru)->postJson(route('attendance.store'), [
+            'class_id' => $this->class7A->id,
+            'date' => now()->toDateString(),
+            'records' => [['student_id' => $this->siswa->id, 'status' => 'H']],
+        ])->assertOk();
+
+        $response = $this->actingAs($this->guru)->get(route('attendance.rekap.export', [
+            'class_id' => $this->class7A->id,
+            'month' => now()->format('Y-m'),
+        ]));
+
+        $response->assertOk();
+        $this->assertTrue(
+            str_contains($response->headers->get('content-disposition'), 'attachment; filename=rekap_presensi_7a_')
+        );
+    }
 }

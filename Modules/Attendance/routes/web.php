@@ -12,5 +12,6 @@ Route::middleware(['auth', SetTenantFromUser::class])->group(function () {
         Route::get('/attendance/class/{class}', [AttendanceController::class, 'classGrid'])->name('attendance.grid');
         Route::post('/attendance', [AttendanceController::class, 'store'])->name('attendance.store');
         Route::get('/attendance/rekap', [AttendanceController::class, 'rekap'])->name('attendance.rekap');
+        Route::get('/attendance/rekap/export', [AttendanceController::class, 'exportRecap'])->name('attendance.rekap.export');
     });
 });

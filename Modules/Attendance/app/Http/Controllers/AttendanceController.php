@@ -12,6 +12,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
+use Modules\Attendance\Exports\AttendanceRecapExport;
 
 class AttendanceController extends Controller
 {
@@ -141,5 +143,20 @@ class AttendanceController extends Controller
         });
 
         return view('admin.attendance.rekap', compact('class', 'month', 'students'));
+    }
+
+    public function exportRecap(Request $request)
+    {
+        $request->validate([
+            'class_id' => 'required|exists:school_classes,id',
+            'month' => 'required|date_format:Y-m',
+        ]);
+
+        $class = SchoolClass::find($request->input('class_id'));
+        $month = $request->input('month');
+
+        $fileName = 'rekap_presensi_' . str_replace(' ', '_', strtolower($class->name)) . '_' . $month . '.xlsx';
+
+        return Excel::download(new AttendanceRecapExport($class, $month), $fileName);
     }
 }
