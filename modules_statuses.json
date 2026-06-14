@@ -2,5 +2,6 @@
     "Core": true,
     "Student": true,
     "Attendance": true,
-    "Finance": true
+    "Finance": true,
+    "Notification": true
 }
