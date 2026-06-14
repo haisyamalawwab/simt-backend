@@ -1,3 +1,6 @@
 {
-    "Core": true
+    "Core": true,
+    "Student": true,
+    "Attendance": true,
+    "Finance": true
 }

@@ -193,16 +193,30 @@ class TenantIsolationTest extends TestCase
     #[Test]
     public function switching_tenant_context_changes_data_visibility(): void
     {
-        // Start with T1
+        // Start with T1 — setUp menanam 5 siswa untuk T1
         app(Tenancy::class)->setTenant($this->tenant1);
         $this->assertCount(5, Student::all());
 
-        // Switch to T2
+        // Switch to T2 — setUp menanam 3 siswa untuk T2
         app(Tenancy::class)->setTenant($this->tenant2);
         $this->assertCount(3, Student::all());
 
-        // Switch back to T1
+        // Switch back to T1 — masih 5 (isolasi konteks bekerja dua arah)
         app(Tenancy::class)->setTenant($this->tenant1);
-        $this->assertCount(6, Student::all()); // 5 + 1 auto-created from test above
+        $this->assertCount(5, Student::all());
+
+        // Buat 1 siswa BARU dalam konteks T1 → tenant_id otomatis terisi,
+        // hanya terlihat di T1, tidak bocor ke T2 (test mandiri, tidak
+        // bergantung pada urutan eksekusi test lain).
+        Student::create([
+            'nis' => 'T1-NEW',
+            'name' => 'Siswa Baru T1',
+            'gender' => 'L',
+            'status' => 'active',
+        ]);
+        $this->assertCount(6, Student::all());
+
+        app(Tenancy::class)->setTenant($this->tenant2);
+        $this->assertCount(3, Student::all()); // T2 tetap 3, tidak terpengaruh
     }
 }

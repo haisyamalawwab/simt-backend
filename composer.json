@@ -38,7 +38,9 @@
             "Modules\\Student\\": "Modules/Student/app/",
             "Modules\\Student\\Database\\Seeders\\": "Modules/Student/database/seeders/",
             "Modules\\Attendance\\": "Modules/Attendance/app/",
-            "Modules\\Attendance\\Database\\Seeders\\": "Modules/Attendance/database/seeders/"
+            "Modules\\Attendance\\Database\\Seeders\\": "Modules/Attendance/database/seeders/",
+            "Modules\\Finance\\": "Modules/Finance/app/",
+            "Modules\\Finance\\Database\\Seeders\\": "Modules/Finance/database/seeders/"
         }
     },
     "autoload-dev": {
