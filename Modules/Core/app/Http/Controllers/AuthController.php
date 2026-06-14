@@ -12,6 +12,11 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
     public function ping(Request $request): JsonResponse
     {
         $tenant = app('currentTenant');
