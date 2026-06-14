@@ -1,7 +1,7 @@
 {
     "name": "Core",
     "alias": "core",
-    "description": "",
+    "description": "Modul INTI (tak bisa dilepas) — Tenant, RBAC, Auth, Dashboard, Super-Admin",
     "keywords": [],
     "priority": 0,
     "providers": [

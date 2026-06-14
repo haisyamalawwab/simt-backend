@@ -17,7 +17,8 @@
         "maatwebsite/excel": "^3.1",
         "nwidart/laravel-modules": "^13.0",
         "predis/predis": "^3.5",
-        "spatie/laravel-permission": "^6.25"
+        "spatie/laravel-permission": "^6.25",
+        "thecodingmachine/safe": "v3.4.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -38,7 +39,11 @@
             "Modules\\Student\\": "Modules/Student/app/",
             "Modules\\Student\\Database\\Seeders\\": "Modules/Student/database/seeders/",
             "Modules\\Attendance\\": "Modules/Attendance/app/",
-            "Modules\\Attendance\\Database\\Seeders\\": "Modules/Attendance/database/seeders/"
+            "Modules\\Attendance\\Database\\Seeders\\": "Modules/Attendance/database/seeders/",
+            "Modules\\Finance\\": "Modules/Finance/app/",
+            "Modules\\Finance\\Database\\Seeders\\": "Modules/Finance/database/seeders/",
+            "Modules\\Notification\\": "Modules/Notification/app/",
+            "Modules\\Notification\\Database\\Seeders\\": "Modules/Notification/database/seeders/"
         }
     },
     "autoload-dev": {

@@ -12,7 +12,7 @@ class SchoolClass extends Model
 {
     use BelongsToTenant;
 
-    protected $table = 'classes';
+    protected $table = 'school_classes';
 
     protected $fillable = ['tenant_id', 'school_year_id', 'name', 'grade', 'teacher_id'];
 

@@ -19,7 +19,7 @@ class AuthController extends Controller
 
     public function ping(Request $request): JsonResponse
     {
-        $tenant = app('currentTenant');
+        $tenant = app(\App\Support\Tenancy::class)->tenant();
         return response()->json([
             'success' => true,
             'data' => [

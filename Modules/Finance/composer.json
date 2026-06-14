@@ -1,0 +1,10 @@
+{
+    "name": "nwidart/finance",
+    "description": "Finance Module for SIMT MTs",
+    "autoload": {
+        "psr-4": {
+            "Modules\\Finance\\": "app/",
+            "Modules\\Finance\\Database\\Seeders\\": "database/seeders/"
+        }
+    }
+}

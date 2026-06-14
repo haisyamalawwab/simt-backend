@@ -1,0 +1,13 @@
+{
+    "name": "Finance",
+    "alias": "finance",
+    "description": "Modul Keuangan (Plug & Play) — Tagihan SPP, pembayaran, kwitansi PDF, pengingat WA",
+    "keywords": [],
+    "priority": 3,
+    "providers": [
+        "Modules\\Finance\\Providers\\FinanceServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

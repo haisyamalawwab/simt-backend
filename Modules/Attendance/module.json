@@ -1,7 +1,7 @@
 {
     "name": "Attendance",
     "alias": "attendance",
-    "description": "Modul Presensi — Grid presensi per kelas, rekap bulanan, notifikasi WA",
+    "description": "Modul Presensi (Plug & Play) — Grid presensi per kelas, rekap bulanan, hook notifikasi WA",
     "keywords": [],
     "priority": 2,
     "providers": [

@@ -16,7 +16,7 @@ class DashboardController extends Controller
     public function index(Request $request): View
     {
         $user = $request->user();
-        $tenant = app('currentTenant');
+        $tenant = app(\App\Support\Tenancy::class)->tenant();
         $today = now()->toDateString();
 
         $stats = [

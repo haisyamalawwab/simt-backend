@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Attendance\Http\Controllers;
+namespace Modules\Finance\Http\Controllers;
 
 use Illuminate\Routing\Controller;
 use App\Jobs\SendWaNotification;
@@ -44,7 +44,7 @@ class FinanceController extends Controller
             'due_date' => 'nullable|date',
         ]);
 
-        $tenant = app('currentTenant');
+        $tenant = app(\App\Support\Tenancy::class)->tenant();
         $activeYear = SchoolYear::where('is_active', true)->first();
         if (! $activeYear) {
             return back()->with('error', 'Tidak ada tahun ajaran aktif.');
@@ -77,7 +77,7 @@ class FinanceController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        $tenant = app('currentTenant');
+        $tenant = app(\App\Support\Tenancy::class)->tenant();
 
         $payment = Payment::create([
             'tenant_id' => $tenant->id,
@@ -101,7 +101,7 @@ class FinanceController extends Controller
 
     public function printReceipt(Payment $payment): \Illuminate\Http\Response
     {
-        $pdf = Pdf::loadView('pdf.receipt', ['payment' => $payment, 'tenant' => app('currentTenant')]);
+        $pdf = Pdf::loadView('pdf.receipt', ['payment' => $payment, 'tenant' => app(\App\Support\Tenancy::class)->tenant()]);
         return $pdf->stream('Kwitansi-' . $payment->receipt_no . '.pdf');
     }
 
@@ -113,7 +113,7 @@ class FinanceController extends Controller
         ]);
 
         $bills = Bill::with('student.guardians')->whereIn('id', $request->input('bill_ids'))->get();
-        $tenant = app('currentTenant');
+        $tenant = app(\App\Support\Tenancy::class)->tenant();
         $queued = 0;
 
         foreach ($bills as $bill) {

@@ -1,7 +1,7 @@
 {
     "name": "Student",
     "alias": "student",
-    "description": "Modul Kesiswaan — CRUD siswa, kelas, tahun ajaran, import Excel",
+    "description": "Modul Kesiswaan (Plug & Play) — CRUD siswa, kelas, tahun ajaran, import Excel",
     "keywords": [],
     "priority": 1,
     "providers": [

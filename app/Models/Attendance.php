@@ -15,7 +15,9 @@ class Attendance extends Model
     ];
 
     protected $casts = [
-        'date' => 'date',
+        // Format Y-m-d (tanpa jam) agar tersimpan & dibandingkan konsisten —
+        // mencegah mismatch saat updateOrCreate(['student_id','date']).
+        'date' => 'date:Y-m-d',
         'arrival_time' => 'datetime:H:i',
     ];
 

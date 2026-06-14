@@ -1,75 +1,134 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SIMT MTs — Backend (Laravel 11)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Sistem Informasi Manajemen Terpadu Madrasah Tsanawiyah** — Micro-SaaS B2B2C multi-tenant untuk manajemen madrasah/sekolah yayasan (MTs/SMP).
 
-## About Laravel
+> Status: MVP — Sprint 1, 2, 3 selesai & terverifikasi. Siap lanjut Sprint 4 (WA Gateway).
+> **Test:** `23 passed (51 assertions)`. Lihat [`DEV_DOCS/54_dev_report_sprint123_stabilization.md`](DEV_DOCS/54_dev_report_sprint123_stabilization.md) untuk konteks lengkap.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📋 Ringkasan
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Aspek | Nilai |
+|---|---|
+| Framework | **Laravel 11** (PHP 8.2+) |
+| Database | **MySQL 8** (produksi) · **SQLite** (dev/test) |
+| Multi-tenancy | Single-DB, row-level (`tenant_id` + Global Scope `BelongsToTenant`) |
+| RBAC | Spatie Permission mode **teams** (`team_id = tenant_id`) |
+| Modularitas | **nwidart/laravel-modules** (plug & play) |
+| Auth | Sanctum (API token 30 hari) + session (web Blade) |
+| Frontend | Blade (admin/guru) · Next.js portal ortu (repo terpisah) |
+| Notifikasi | WhatsApp via Baileys self-hosted (Sprint 4) |
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🧩 Arsitektur Modul
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Dua lapisan modularitas (lihat [`DEV_DOCS/ARSITEKTUR_MODUL_CORE_vs_PLUGNPLAY.md`](DEV_DOCS/ARSITEKTUR_MODUL_CORE_vs_PLUGNPLAY.md)):
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Modul | Tipe | Isi |
+|---|---|---|
+| **Core** | 🔒 INTI (tak bisa dilepas) | Tenant, RBAC, Auth, Dashboard, Super-Admin |
+| **Student** | 🔌 Plug & Play | CRUD siswa/kelas/TA, import Excel 3-langkah |
+| **Attendance** | 🔌 Plug & Play | Grid presensi, rekap bulanan, hook WA |
+| **Finance** | 🔌 Plug & Play | Tagihan SPP, pembayaran, kwitansi PDF, pengingat WA |
 
-## Laravel Sponsors
+- **Lapisan kode (nwidart):** `php artisan module:disable Finance` → route modul hilang dari aplikasi.
+- **Lapisan langganan (`tenant_modules`):** middleware `module.active:{Kode}` → per-sekolah; tenant tanpa langganan dapat `403`.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Cara menambah modul baru: lihat [`DEV_DOCS/PANDUAN_BUAT_MODUL_PLUGNPLAY.md`](DEV_DOCS/PANDUAN_BUAT_MODUL_PLUGNPLAY.md).
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## 🚀 Setup Cepat
 
-## Contributing
+```bash
+# Prasyarat: PHP 8.2+ (ext: sqlite3/pdo_mysql, mbstring, xml, curl, zip, gd, bcmath), Composer 2
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+composer install
+cp .env.example .env
+php artisan key:generate
 
-## Code of Conduct
+# --- DEV (SQLite) ---
+touch database/database.sqlite          # pastikan DB_CONNECTION=sqlite di .env
+php artisan migrate:fresh --seed        # 11 migrasi + demo 106 siswa
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+php artisan serve                       # http://127.0.0.1:8000
+```
 
-## Security Vulnerabilities
+### Produksi (MySQL)
+Set `.env`: `DB_CONNECTION=mysql`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`, lalu `php artisan migrate --seed`.
+Skema lengkap & catatan migrasi: [`DEV_DOCS/DATABASE_SCHEMA.md`](DEV_DOCS/DATABASE_SCHEMA.md).
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🔑 Akun Demo (password: `password`)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Login | Peran | Tenant |
+|---|---|---|
+| `vendor@simt.id` | superadmin | lintas tenant |
+| `ahmad@mts-alhikmah.sch.id` | admin_sekolah | T1 (modul lengkap) |
+| `ahmad@mts-annur.sch.id` | guru | T2 (Core+Student saja) |
+| phone `628520000001` | wali | T1 (portal) |
 
-## SIMT Backend - Test Branch
+---
 
-Branch `qwen-update` digunakan untuk testing workflow git (pull, push, fetch).
+## 🗂️ Struktur Direktori
 
-## Update Testing
+```
+app/
+├── Http/Middleware/    IdentifyTenant, SetTenantFromUser, CheckTenantAccess, EnsureModuleActive
+├── Models/             Tenant, User, Student, SchoolClass, Attendance, Bill, Payment, ...
+├── Services/           TenantRoleService, StudentImportService
+├── Support/            Tenancy (singleton konteks tenant)
+├── Traits/             BelongsToTenant (global scope + auto-fill)
+└── Jobs/               SendWaNotification
+Modules/                Core · Student · Attendance · Finance (nwidart)
+database/
+├── migrations/         11 file (lihat DATABASE_SCHEMA.md)
+└── seeders/            RolePermissionSeeder, DemoTenantSeeder, PitchingDemoSeeder
+tests/Feature/          TenantIsolationTest(8) · StudentModuleTest(8) · AttendanceModuleTest(5)
+DEV_DOCS/               Dokumentasi proyek (dev report, arsitektur, API, DB, panduan modul)
+```
 
-✅ Test berhasil: Perubahan kecil pada README.md telah di-commit dan di-push ke remote.
-📅 Terakhir diupdate: $(date)
+---
+
+## 🧪 Testing
+
+```bash
+php artisan test                 # 23 passed (51 assertions)
+php artisan test --filter=AttendanceModuleTest
+```
+Detail: [`DEV_DOCS/...`](DEV_DOCS/). Test pakai SQLite in-memory (lihat `phpunit.xml`).
+
+---
+
+## 📡 API
+
+Base: `/api/v1` · Auth: `Authorization: Bearer {token}` · Tenant: header `X-Tenant-Domain: {domain}`.
+Kontrak lengkap: [`DEV_DOCS/API_CONTRACT.md`](DEV_DOCS/API_CONTRACT.md).
+
+Contoh:
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/auth/login \
+  -H "Accept: application/json" -H "Content-Type: application/json" \
+  -d '{"login":"ahmad@mts-alhikmah.sch.id","password":"password"}'
+```
+
+---
+
+## 📚 Dokumentasi (DEV_DOCS/)
+
+| Dokumen | Isi |
+|---|---|
+| `54_dev_report_sprint123_stabilization.md` | Dev report & handover konteks (WAJIB dibaca agent baru) |
+| `ARSITEKTUR_MODUL_CORE_vs_PLUGNPLAY.md` | Pemetaan Core vs Plug & Play |
+| `API_CONTRACT.md` | Kontrak endpoint web + API |
+| `DATABASE_SCHEMA.md` | 12 tabel domain + relasi + catatan MySQL |
+| `PANDUAN_BUAT_MODUL_PLUGNPLAY.md` | Langkah membuat modul nwidart baru |
+
+> ⚠️ Folder `vendor/` bisa hilang antar-sesi sandbox. Jika `artisan` error "Class Illuminate\Foundation\Application not found", jalankan `composer install`.
+
+---
+
+*MVP Edition — 3 Bulan / Rp 5 Juta · Bahasa Indonesia · istilah madrasah (Wali Kelas, TU, Bendahara, dst.)*

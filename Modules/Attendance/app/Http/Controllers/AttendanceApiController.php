@@ -5,6 +5,7 @@ namespace Modules\Attendance\Http\Controllers;
 use Illuminate\Routing\Controller;
 use App\Models\Attendance;
 use App\Models\Student;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -29,8 +30,12 @@ class AttendanceApiController extends Controller
 
         $month = $request->input('month', now()->format('Y-m'));
 
+        // Portable date-range (kompatibel SQLite & MySQL)
+        $start = Carbon::createFromFormat('Y-m', $month)->startOfMonth()->toDateString();
+        $end = Carbon::createFromFormat('Y-m', $month)->endOfMonth()->toDateString();
+
         $attendances = Attendance::where('student_id', $student->id)
-            ->whereRaw("DATE_FORMAT(date, '%Y-%m') = ?", [$month])
+            ->whereBetween('date', [$start, $end])
             ->orderBy('date')
             ->get(['id', 'date', 'status', 'arrival_time', 'notes']);
 

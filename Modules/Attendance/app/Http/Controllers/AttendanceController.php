@@ -12,6 +12,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
+use Modules\Attendance\Exports\AttendanceRecapExport;
 
 class AttendanceController extends Controller
 {
@@ -40,10 +42,21 @@ class AttendanceController extends Controller
         return view('admin.attendance.index', compact('classes', 'selectedClass', 'date', 'students'));
     }
 
+    /**
+     * Grid presensi untuk kelas tertentu (route-model-binding /attendance/class/{class}).
+     * Reuse index() dengan kelas yang sudah dipilih agar konsisten dengan UI grid.
+     */
+    public function classGrid(Request $request, SchoolClass $class): View
+    {
+        $request->merge(['class_id' => $class->id]);
+
+        return $this->index($request);
+    }
+
     public function store(Request $request): JsonResponse
     {
         $request->validate([
-            'class_id' => 'required|exists:classes,id',
+            'class_id' => 'required|exists:school_classes,id',
             'date' => 'required|date',
             'records' => 'required|array',
             'records.*.student_id' => 'required|exists:students,id',
@@ -51,10 +64,13 @@ class AttendanceController extends Controller
         ]);
 
         $classId = $request->input('class_id');
-        $date = $request->input('date');
+        // Normalisasi ke Y-m-d agar updateOrCreate cocok dengan baris yang sudah ada.
+        // (kolom `date` di-cast date → tersimpan 00:00:00; tanpa normalisasi,
+        //  pembandingan string gagal cocok → duplikat & melanggar unique(student,date)).
+        $date = Carbon::parse($request->input('date'))->toDateString();
         $records = $request->input('records');
         $userId = $request->user()->id;
-        $tenant = app('currentTenant');
+        $tenant = app(\App\Support\Tenancy::class)->tenant();
 
         $saved = 0;
         foreach ($records as $record) {
@@ -105,7 +121,7 @@ class AttendanceController extends Controller
     public function rekap(Request $request): View
     {
         $request->validate([
-            'class_id' => 'required|exists:classes,id',
+            'class_id' => 'required|exists:school_classes,id',
             'month' => 'required|date_format:Y-m',
         ]);
 
@@ -113,8 +129,12 @@ class AttendanceController extends Controller
         $month = $request->input('month');
         $students = $class->students;
 
+        // Portable date-range filter (kompatibel SQLite & MySQL) — hindari DATE_FORMAT MySQL-only.
+        $start = Carbon::createFromFormat('Y-m', $month)->startOfMonth()->toDateString();
+        $end = Carbon::createFromFormat('Y-m', $month)->endOfMonth()->toDateString();
+
         $attendances = Attendance::where('class_id', $class->id)
-            ->whereRaw("DATE_FORMAT(date, '%Y-%m') = ?", [$month])
+            ->whereBetween('date', [$start, $end])
             ->get()
             ->groupBy('student_id');
 
@@ -123,5 +143,20 @@ class AttendanceController extends Controller
         });
 
         return view('admin.attendance.rekap', compact('class', 'month', 'students'));
+    }
+
+    public function exportRecap(Request $request)
+    {
+        $request->validate([
+            'class_id' => 'required|exists:school_classes,id',
+            'month' => 'required|date_format:Y-m',
+        ]);
+
+        $class = SchoolClass::find($request->input('class_id'));
+        $month = $request->input('month');
+
+        $fileName = 'rekap_presensi_' . str_replace(' ', '_', strtolower($class->name)) . '_' . $month . '.xlsx';
+
+        return Excel::download(new AttendanceRecapExport($class, $month), $fileName);
     }
 }

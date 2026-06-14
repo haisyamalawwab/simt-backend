@@ -34,6 +34,8 @@
                 <a href="{{ route('finance.bills') }}" class="block px-3 py-2 rounded hover:bg-slate-700 {{ request()->routeIs('finance.*') ? 'bg-slate-700' : '' }}">Keuangan</a>
                 @endcanany
 
+                <a href="{{ route('notification.connect') }}" class="block px-3 py-2 rounded hover:bg-slate-700 {{ request()->routeIs('notification.*') ? 'bg-slate-700' : '' }}">WA Connect</a>
+
                 <form action="/logout" method="POST" class="mt-4">
                     @csrf
                     <button type="submit" class="w-full text-left px-3 py-2 rounded hover:bg-red-600 text-red-300 hover:text-white">Logout</button>
