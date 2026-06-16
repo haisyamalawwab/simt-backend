@@ -94,3 +94,48 @@ php83 artisan test --filter=PortalOrtuApiTest
 
 #### Manual Verification
 *   Gunakan HTTP Client / Postman / Curl untuk menguji respon endpoint API baru dari server lokal `localhost:8000`.
+
+---
+
+## REVISI: Penyesuaian Arsitektur Local-First Offline Sync (Primary Key String CUID/UUID)
+
+> [!NOTE]
+> Revisi ini ditambahkan pada **16 Juni 2026** untuk mendukung fitur *local-first* pada **simt-portalortu**. Karena database lokal portal menggunakan SQLite dengan tipe primary key string (CUID), database backend perlu disesuaikan agar menerima ID bertipe string alih-alih integer auto-increment untuk tabel-tabel baru ini.
+
+### 1. Perubahan Skema Database (Migration)
+Pada file [2026_06_16_000002_create_portal_ortu_tables.php](file:///d:/laragon/www/simt-backend/database/migrations/2026_06_16_000002_create_portal_ortu_tables.php), definisi primary key untuk kelima tabel baru (`schedules`, `student_violations`, `student_achievements`, `tahfiz_records`, `grade_details`) akan diubah dari:
+```php
+$table->id();
+```
+menjadi:
+```php
+$table->string('id', 50)->primary();
+```
+
+### 2. Perubahan Model Eloquent
+Pada model-model berikut:
+- [Schedule.php](file:///d:/laragon/www/simt-backend/app/Models/Schedule.php)
+- [StudentViolation.php](file:///d:/laragon/www/simt-backend/app/Models/StudentViolation.php)
+- [StudentAchievement.php](file:///d:/laragon/www/simt-backend/app/Models/StudentAchievement.php)
+- [TahfizRecord.php](file:///d:/laragon/www/simt-backend/app/Models/TahfizRecord.php)
+- [GradeDetail.php](file:///d:/laragon/www/simt-backend/app/Models/GradeDetail.php)
+
+Akan ditambahkan properti untuk menonaktifkan auto-increment integer, serta pemicu pembuatan UUID secara otomatis ketika record baru disimpan tanpa ID eksplisit (untuk kompatibilitas creation langsung dari backend):
+```php
+    protected $keyType = 'string';
+    public $incrementing = false;
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            if (empty($model->id)) {
+                $model->id = (string) \Illuminate\Support\Str::uuid();
+            }
+        });
+    }
+```
+
+### 3. Penyesuaian Seeder & Uji Otomatis
+Seeder [PitchingDemoSeeder.php](file:///d:/laragon/www/simt-backend/database/seeders/PitchingDemoSeeder.php) akan berjalan melalui model instantiator Eloquent agar otomatis memicu penulisan UUID jika field ID kosong, sehingga data demo memiliki primary key string UUID yang valid. Pengujian otomatis di [PortalOrtuApiTest.php](file:///d:/laragon/www/simt-backend/tests/Feature/PortalOrtuApiTest.php) akan dijalankan untuk memverifikasi fungsionalitas CRUD & dashboard dengan ID bertipe string ini.
+
