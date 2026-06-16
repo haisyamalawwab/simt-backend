@@ -18,6 +18,7 @@ Route::prefix('admin')->middleware(['auth', 'role:superadmin'])->group(function 
     Route::post('/tenants', [SuperAdminController::class, 'storeTenant'])->name('super.tenant.store');
     Route::get('/tenants/{tenant}/edit', [SuperAdminController::class, 'editTenant'])->name('super.tenant.edit');
     Route::put('/tenants/{tenant}', [SuperAdminController::class, 'updateTenant'])->name('super.tenant.update');
+    Route::get('/audit-logs', [SuperAdminController::class, 'auditLogs'])->name('super.audit-logs');
 });
 
 /*
@@ -29,6 +30,7 @@ Route::prefix('admin')->middleware(['auth', 'role:superadmin'])->group(function 
 // (yang berbasis header/subdomain untuk API). Sumber kebenaran tenant web = users.tenant_id.
 Route::middleware(['auth', SetTenantFromUser::class])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/audit-logs', [DashboardController::class, 'auditLogs'])->name('audit-logs')->middleware('permission:view_audit_logs');
 });
 
 Route::get('/', function () {
