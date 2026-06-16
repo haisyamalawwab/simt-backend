@@ -1,0 +1,9 @@
+{
+  "name": "nwidart/akademik",
+  "autoload": {
+    "psr-4": {
+      "Modules\\Akademik\\": "app/",
+      "Modules\\Akademik\\Database\\Seeders\\": "database/seeders/"
+    }
+  }
+}

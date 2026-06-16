@@ -3,5 +3,6 @@
     "Student": true,
     "Attendance": true,
     "Finance": true,
-    "Notification": true
+    "Notification": true,
+    "Akademik": true
 }

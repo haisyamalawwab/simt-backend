@@ -43,7 +43,9 @@
             "Modules\\Finance\\": "Modules/Finance/app/",
             "Modules\\Finance\\Database\\Seeders\\": "Modules/Finance/database/seeders/",
             "Modules\\Notification\\": "Modules/Notification/app/",
-            "Modules\\Notification\\Database\\Seeders\\": "Modules/Notification/database/seeders/"
+            "Modules\\Notification\\Database\\Seeders\\": "Modules/Notification/database/seeders/",
+            "Modules\\Akademik\\": "Modules/Akademik/app/",
+            "Modules\\Akademik\\Database\\Seeders\\": "Modules/Akademik/database/seeders/"
         }
     },
     "autoload-dev": {
