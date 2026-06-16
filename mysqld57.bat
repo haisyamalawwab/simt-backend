@@ -1,0 +1,3 @@
+@echo off
+echo Starting MySQL 5.7 server...
+"D:\laragon\bin\mysql\mysql-5.7.44-winx64\bin\mysqld.exe" --console --datadir="D:\laragon\data\mysql" --port=3306

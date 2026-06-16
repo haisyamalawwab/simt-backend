@@ -26,12 +26,7 @@ class AuditLog extends Model
         'user_agent',
     ];
 
-    // The attributes that should be cast
-    protected $casts = [
-        'old_values' => 'array',
-        'new_values' => 'array',
-        'created_at' => 'datetime',
-    ];
+
 
     // Disable default timestamps (since we only have created_at)
     public $timestamps = false;

@@ -15,9 +15,5 @@ class WaNotification extends Model
         'tenant_id', 'to_phone', 'type', 'payload', 'status', 'attempts', 'last_error', 'sent_at'
     ];
 
-    protected $casts = [
-        'payload' => 'array',
-        'attempts' => 'integer',
-        'sent_at' => 'datetime',
-    ];
+
 }

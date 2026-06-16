@@ -20,9 +20,7 @@ class Grade extends Model
         'description',
     ];
 
-    protected $casts = [
-        'score' => 'decimal:2',
-    ];
+
 
     public function tenant()
     {

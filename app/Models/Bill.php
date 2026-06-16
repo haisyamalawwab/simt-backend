@@ -16,12 +16,7 @@ class Bill extends Model
         'tenant_id', 'student_id', 'period', 'component', 'amount', 'paid_amount', 'discount', 'status', 'due_date'
     ];
 
-    protected $casts = [
-        'amount' => 'decimal:2',
-        'paid_amount' => 'decimal:2',
-        'discount' => 'decimal:2',
-        'due_date' => 'date',
-    ];
+
 
     public function student(): BelongsTo
     {

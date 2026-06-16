@@ -16,24 +16,9 @@ class Student extends Model
         'tenant_id', 'nis', 'nisn', 'name', 'gender', 'birth_date', 'birth_place', 'address', 'status'
     ];
 
-    protected $casts = [
-        'birth_date' => \App\Casts\EncryptedDate::class,
-        'nisn' => 'encrypted',
-        'birth_place' => 'encrypted',
-        'gender' => 'encrypted',
-        'address' => 'encrypted',
-    ];
 
-    protected static function booted()
-    {
-        static::saving(function ($student) {
-            if ($student->isDirty('nisn')) {
-                $student->nisn_bindex = $student->nisn 
-                    ? hash_hmac('sha256', $student->nisn, config('app.key')) 
-                    : null;
-            }
-        });
-    }
+
+
 
 
     public function guardians(): BelongsToMany

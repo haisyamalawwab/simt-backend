@@ -22,11 +22,7 @@ class Announcement extends Model
         'expires_at',
     ];
 
-    protected $casts = [
-        'is_pinned' => 'boolean',
-        'published_at' => 'datetime',
-        'expires_at' => 'datetime',
-    ];
+
 
     public function tenant()
     {
