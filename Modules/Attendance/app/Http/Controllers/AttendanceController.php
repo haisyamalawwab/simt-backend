@@ -59,7 +59,7 @@ class AttendanceController extends Controller
             }
         }
 
-        return view('admin.attendance.index', compact('classes', 'selectedClass', 'date', 'students'));
+        return view('attendance::index', compact('classes', 'selectedClass', 'date', 'students'));
     }
 
     /**
@@ -198,7 +198,7 @@ class AttendanceController extends Controller
             $student->monthly = $attendances->get($student->id, collect())->keyBy(fn ($a) => $a->date->format('Y-m-d'));
         });
 
-        return view('admin.attendance.rekap', compact('class', 'month', 'students'));
+        return view('attendance::rekap', compact('class', 'month', 'students'));
     }
 
     public function exportRecap(Request $request)

@@ -36,7 +36,7 @@ class AttendanceRecapExport implements FromView, WithTitle, ShouldAutoSize
             $student->monthly = $attendances->get($student->id, collect())->keyBy(fn ($a) => $a->date->format('Y-m-d'));
         });
 
-        return view('admin.attendance.rekap_excel', [
+        return view('attendance::rekap_excel', [
             'class' => $this->class,
             'month' => $this->month,
             'students' => $students,

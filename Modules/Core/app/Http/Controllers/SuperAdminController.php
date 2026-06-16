@@ -23,12 +23,12 @@ class SuperAdminController extends Controller
             'suspended' => Tenant::where('status', 'suspended')->count(),
         ];
 
-        return view('admin.super.dashboard', compact('tenants', 'stats'));
+        return view('core::super.dashboard', compact('tenants', 'stats'));
     }
 
     public function createTenant(): View
     {
-        return view('admin.super.tenant-create');
+        return view('core::super.tenant-create');
     }
 
     public function storeTenant(Request $request): RedirectResponse
@@ -75,7 +75,7 @@ class SuperAdminController extends Controller
     {
         $tenant->load('modules');
         $allModules = ['Core', 'Student', 'Attendance', 'Finance', 'Tahfiz', 'Inklusi'];
-        return view('admin.super.tenant-edit', compact('tenant', 'allModules'));
+        return view('core::super.tenant-edit', compact('tenant', 'allModules'));
     }
 
     public function updateTenant(Request $request, Tenant $tenant): RedirectResponse
