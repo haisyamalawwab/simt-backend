@@ -42,6 +42,11 @@ class RolePermissionSeeder extends Seeder
 
             // WhatsApp
             'wa.connect',
+
+            // Akademik
+            'view_akademik',
+            'manage_akademik',
+            'manage_grades',
         ];
 
         foreach ($permissions as $perm) {
@@ -50,10 +55,10 @@ class RolePermissionSeeder extends Seeder
 
         $roles = [
             'superadmin' => Permission::all()->pluck('name')->toArray(),
-            'kepala_madrasah' => ['view_dashboard', 'view_students', 'view_attendance', 'view_attendance_rekap', 'view_bills'],
-            'tu' => ['view_dashboard', 'view_students', 'create_students', 'edit_students', 'import_students', 'view_attendance', 'view_attendance_rekap'],
+            'kepala_madrasah' => ['view_dashboard', 'view_students', 'view_attendance', 'view_attendance_rekap', 'view_bills', 'view_akademik'],
+            'tu' => ['view_dashboard', 'view_students', 'create_students', 'edit_students', 'import_students', 'view_attendance', 'view_attendance_rekap', 'wa.connect', 'view_akademik', 'manage_akademik'],
             'bendahara' => ['view_dashboard', 'view_bills', 'create_bills', 'record_payment', 'print_receipt', 'send_reminders'],
-            'guru' => ['view_dashboard', 'view_students', 'view_attendance', 'mark_attendance', 'edit_attendance'],
+            'guru' => ['view_dashboard', 'view_students', 'view_attendance', 'mark_attendance', 'edit_attendance', 'view_akademik', 'manage_grades'],
             'wali' => ['view_dashboard'],
         ];
 
