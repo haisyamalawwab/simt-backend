@@ -29,30 +29,39 @@
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full text-sm">
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-50 text-gray-500 uppercase font-medium text-xs">
                     <tr>
-                        <th class="px-4 py-2 text-left">Nama</th>
-                        <th class="px-4 py-2 text-left">Domain</th>
-                        <th class="px-4 py-2 text-left">Status</th>
-                        <th class="px-4 py-2 text-left">User</th>
-                        <th class="px-4 py-2 text-left">Aksi</th>
+                        <th class="px-4 py-3 text-left">Nama</th>
+                        <th class="px-4 py-3 text-left">Domain</th>
+                        <th class="px-4 py-3 text-left">Status</th>
+                        <th class="px-4 py-3 text-center">User</th>
+                        <th class="px-4 py-3 text-center">Siswa</th>
+                        <th class="px-4 py-3 text-center">Rombel</th>
+                        <th class="px-4 py-3 text-center">Modul Aktif</th>
+                        <th class="px-4 py-3 text-left">Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-gray-100">
                     @foreach($tenants as $t)
-                    <tr class="border-t">
-                        <td class="px-4 py-2">{{ $t->name }}</td>
-                        <td class="px-4 py-2">{{ $t->domain }}.simt.id</td>
-                        <td class="px-4 py-2">
-                            <span class="px-2 py-1 rounded text-xs font-medium
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-3 font-semibold text-gray-800">{{ $t->name }}</td>
+                        <td class="px-4 py-3 text-gray-500 font-mono text-xs">{{ $t->domain }}.simt.id</td>
+                        <td class="px-4 py-3">
+                            <span class="px-2 py-0.5 rounded text-xs font-semibold
                                 {{ $t->status === 'active' ? 'bg-emerald-100 text-emerald-700' : '' }}
                                 {{ $t->status === 'suspended' ? 'bg-red-100 text-red-700' : '' }}
+                                {{ $t->status === 'contracted' ? 'bg-blue-100 text-blue-700' : '' }}
                                 {{ $t->status === 'prospect' ? 'bg-gray-100 text-gray-700' : '' }}
-                            ">{{ $t->status }}</span>
+                            ">{{ strtoupper($t->status) }}</span>
                         </td>
-                        <td class="px-4 py-2">{{ $t->users_count }}</td>
-                        <td class="px-4 py-2">
-                            <a href="{{ route('super.tenant.edit', $t) }}" class="text-blue-600 hover:underline">Edit</a>
+                        <td class="px-4 py-3 text-center font-semibold text-blue-700">{{ $t->users_count }}</td>
+                        <td class="px-4 py-3 text-center font-semibold text-gray-700">{{ $t->students_count }}</td>
+                        <td class="px-4 py-3 text-center font-semibold text-gray-700">{{ $t->classes_count }}</td>
+                        <td class="px-4 py-3 text-center">
+                            <span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded text-xs font-bold">{{ $t->modules_count }}</span>
+                        </td>
+                        <td class="px-4 py-3">
+                            <a href="{{ route('super.tenant.edit', $t) }}" class="text-blue-600 hover:text-blue-800 font-medium">Edit / Kelola</a>
                         </td>
                     </tr>
                     @endforeach

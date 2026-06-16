@@ -19,8 +19,13 @@
                 <a href="{{ route('dashboard') }}" class="block px-3 py-2 rounded hover:bg-slate-700 {{ request()->routeIs('dashboard') ? 'bg-slate-700' : '' }}">Dashboard</a>
 
                 @role('superadmin')
-                <a href="{{ route('super.dashboard') }}" class="block px-3 py-2 rounded hover:bg-slate-700 {{ request()->routeIs('super.*') ? 'bg-slate-700' : '' }}">Super Admin</a>
+                <a href="{{ route('super.dashboard') }}" class="block px-3 py-2 rounded hover:bg-slate-700 {{ request()->routeIs('super.dashboard') || request()->routeIs('super.tenant.*') ? 'bg-slate-700' : '' }}">Super Admin</a>
+                <a href="{{ route('super.audit-logs') }}" class="block px-3 py-2 rounded hover:bg-slate-700 {{ request()->routeIs('super.audit-logs') ? 'bg-slate-700' : '' }}">Super Audit Logs</a>
                 @endrole
+
+                @can('view_audit_logs')
+                <a href="{{ route('audit-logs') }}" class="block px-3 py-2 rounded hover:bg-slate-700 {{ request()->routeIs('audit-logs') ? 'bg-slate-700' : '' }}">Audit Logs</a>
+                @endcan
 
                 @canany(['view_students','create_students'])
                 <a href="{{ route('students.index') }}" class="block px-3 py-2 rounded hover:bg-slate-700 {{ request()->routeIs('students.*') ? 'bg-slate-700' : '' }}">Kesiswaan</a>
