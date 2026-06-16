@@ -31,14 +31,14 @@ class TenantRoleService
             'view_students', 'create_students', 'edit_students', 'delete_students', 'import_students',
             'view_attendance', 'mark_attendance', 'edit_attendance', 'view_attendance_rekap',
             'view_bills', 'create_bills', 'record_payment', 'print_receipt', 'send_reminders',
-            'wa.connect', 'view_akademik', 'manage_akademik', 'manage_grades',
+            'wa.connect', 'view_akademik', 'manage_akademik', 'manage_grades', 'view_audit_logs',
         ],
         'kepala_madrasah' => [
-            'view_dashboard', 'view_students', 'view_attendance', 'view_attendance_rekap', 'view_bills', 'view_akademik',
+            'view_dashboard', 'view_students', 'view_attendance', 'view_attendance_rekap', 'view_bills', 'view_akademik', 'view_audit_logs',
         ],
         'tu' => [
             'view_dashboard', 'view_students', 'create_students', 'edit_students', 'import_students',
-            'view_attendance', 'view_attendance_rekap', 'wa.connect', 'view_akademik', 'manage_akademik',
+            'view_attendance', 'view_attendance_rekap', 'wa.connect', 'view_akademik', 'manage_akademik', 'view_audit_logs',
         ],
         'bendahara' => [
             'view_dashboard', 'view_bills', 'create_bills', 'record_payment', 'print_receipt', 'send_reminders',
