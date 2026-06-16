@@ -1,44 +1,40 @@
 <?php
 
-namespace Modules\Akademik\Http\Controllers;
+namespace Modules\Akademik\app\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\View\View;
+use App\Models\SchoolClass;
+use App\Models\Subject;
+use Illuminate\Http\Request;
 
 class AkademikController extends Controller
 {
-    public function index(): View
+    /**
+     * Dashboard Akademik - Ringkasan Rombel & Mapel
+     */
+    public function index()
     {
-        return view('akademik::index');
+        $classes = SchoolClass::with('schoolYear')->get();
+        $subjects = Subject::all();
+        
+        return view('akademik::index', compact('classes', 'subjects'));
     }
 
-    public function create(): View
+    /**
+     * Manajemen Rombongan Belajar (Rombel)
+     */
+    public function classes()
     {
-        return view('akademik::create');
+        $classes = SchoolClass::with('schoolYear')->paginate(10);
+        return view('akademik::classes', compact('classes'));
     }
 
-    public function store()
+    /**
+     * Manajemen Mata Pelajaran
+     */
+    public function subjects()
     {
-        return redirect()->route('akademik.index')->with('success', 'Data akademik berhasil disimpan.');
-    }
-
-    public function show($id): View
-    {
-        return view('akademik::show', compact('id'));
-    }
-
-    public function edit($id): View
-    {
-        return view('akademik::edit', compact('id'));
-    }
-
-    public function update($id)
-    {
-        return redirect()->route('akademik.index')->with('success', 'Data akademik berhasil diperbarui.');
-    }
-
-    public function destroy($id)
-    {
-        return redirect()->route('akademik.index')->with('success', 'Data akademik berhasil dihapus.');
+        $subjects = Subject::paginate(10);
+        return view('akademik::subjects', compact('subjects'));
     }
 }
