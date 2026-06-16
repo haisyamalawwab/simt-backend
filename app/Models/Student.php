@@ -4,12 +4,12 @@ namespace App\Models;
 
 use App\Traits\BelongsToTenant;
 use App\Traits\Auditable;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Sanctum\HasApiTokens;
 
-class Student extends Model
+class Student extends Authenticatable
 {
     use BelongsToTenant, Auditable, HasApiTokens;
 
