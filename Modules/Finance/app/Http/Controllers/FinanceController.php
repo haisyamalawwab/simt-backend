@@ -14,6 +14,7 @@ use Illuminate\View\View;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Finance\Exports\BillsRecapExport;
+use Illuminate\Support\Facades\DB;
 
 class FinanceController extends Controller
 {
