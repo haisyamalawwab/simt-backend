@@ -43,7 +43,7 @@ class DemoTenantSeeder extends Seeder
             ]
         );
 
-        foreach (['Core', 'Student', 'Attendance', 'Finance'] as $mod) {
+        foreach (['Core', 'Student', 'Attendance', 'Finance', 'Akademik'] as $mod) {
             TenantModule::firstOrCreate(
                 ['tenant_id' => $t1->id, 'module_code' => $mod],
                 ['active' => true]
