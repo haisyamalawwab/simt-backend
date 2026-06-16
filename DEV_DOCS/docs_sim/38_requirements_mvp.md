@@ -22,6 +22,10 @@ Notasi prioritas: **P0** = wajib MVP, **P1** = jika waktu tersedia, **P2** = pos
 | FR-C06 | Panel Super-Admin Vendor: CRUD tenant, aktivasi/suspend, set modul, catat invoice & status pembayaran (prepaid semester). | P0 |
 | FR-C07 | Tenant dengan invoice `overdue > 14 hari` otomatis berstatus `suspended` (read-only, banner peringatan). | P1 |
 | FR-C08 | Audit log aksi sensitif (login, ubah pembayaran, hapus siswa). | P1 |
+| SA-01 | Registrasi / Onboarding Tenant Baru: Membuat tenant baru, menginisialisasi modul default (Core, Student, Attendance, Finance), dan membuat akun administrator default tenant (`kepala_madrasah`) secara otomatis. | P0 |
+| SA-02 | Manajemen Subskripsi & Modul: Mengubah status tenant (active, suspended, grace_read, dll) dan mengaktifkan/menonaktifkan modul per-tenant. | P0 |
+| SA-03 | Dashboard Pemantauan Global (Lintas Tenant): Halaman dashboard khusus superadmin vendor untuk memantau total tenant, total pengguna, dan status operasional lintas tenant. | P0 |
+
 
 ### FR-SIS — Kesiswaan (Master Data)
 

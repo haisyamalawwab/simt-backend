@@ -1109,7 +1109,37 @@ Berikut adalah daftar functional requirements per modul. Format: FR-XX-YYY
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
+#### 3.2.5 Modul Core & Platform (Superadmin)
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│               MODUL CORE & PLATFORM - REQUIREMENTS                 │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  FR-SA-001: Onboarding Tenant Baru                                  │
+│  ├── SA-01: Sistem harus dapat membuat tenant baru (sekolah/yayasan)│
+│  │   melalui subdomain unik (misal: sekolah.simt.id).                │
+│  ├── SA-01.1: Sistem secara otomatis menginisialisasi modul default │
+│  │   (Core, Student, Attendance, Finance) setelah tenant dibuat.      │
+│  └── SA-01.2: Sistem secara otomatis membuat akun administrator     │
+│      default untuk tenant tersebut dengan role kepala_madrasah.     │
+│                                                                     │
+│  FR-SA-002: Manajemen Subskripsi & Modul                            │
+│  ├── SA-02: Superadmin harus dapat mengaktifkan atau menonaktifkan  │
+│  │   modul per-tenant sesuai dengan status subskripsi.              │
+│  └── SA-02.1: Superadmin dapat merubah status operasional tenant    │
+│      (prospect, contracted, active, suspended, terminated).         │
+│                                                                     │
+│  FR-SA-003: Dashboard Pemantauan Global                             │
+│  └── SA-03: Sistem menyediakan dashboard global bagi Superadmin     │
+│      untuk melihat statistik jumlah tenant, total user aktif, dan   │
+│      status subskripsi tenant secara real-time.                     │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
 ### 3.3 Performance Requirements
+
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
