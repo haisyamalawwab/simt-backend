@@ -9,6 +9,18 @@ description: >
 
 # Nwidart Module Management — SIMT Backend
 
+## 📜 Protokol Dokumentasi & Riwayat Pembaruan (Penting untuk Agentic AI)
+
+> 🔒 **ATURAN MUTLAK:** Jangan pernah menghapus atau menimpa (overwrite) baris-baris sejarah pada dokumen laporan pengembangan (`dev report`) atau perencanaan (`plan docs`) sebelumnya. 
+> 
+> Setiap kali ada pembaruan, revisi fitur, atau perbaikan bug:
+> 1. **Selalu pertahankan konten asli** dokumen/bagian sebelumnya tanpa modifikasi destruktif.
+> 2. **Tambahkan log baru (append)** di bawahnya (misalnya, buat sub-bagian *Catatan Revisi / Revision History*).
+> 
+> Protokol ini sangat krusial bagi AI Agent lainnya agar dapat membangun konteks secara utuh, melacak keputusan arsitektur di masa lalu, dan mencegah hilangnya alasan teknis (*decision rationale*) di balik kode yang diimplementasikan.
+
+---
+
 ## ⚠️ Pelajaran Penting (dari Bug Produksi 2026-06-14)
 
 > **Setiap kali menambah modul nwidart baru dan mengaktifkannya di `modules_statuses.json`,
@@ -94,6 +106,7 @@ php83 artisan serve --port=8000
 | `Attendance` | `Modules/Attendance/app/` | ✅ Aktif |
 | `Finance` | `Modules/Finance/app/` | ✅ Aktif |
 | `Notification` | `Modules/Notification/app/` | ✅ Aktif |
+| `Akademik` | `Modules/Akademik/app/` | ✅ Aktif |
 
 ---
 
@@ -102,3 +115,22 @@ php83 artisan serve --port=8000
 - **Modul Core** = mandatory, tidak pernah dinonaktifkan via `modules_statuses.json`
 - **Modul lainnya** = Plug & Play, bisa diaktifkan/nonaktifkan per tenant via tabel `tenant_modules`
 - Guard autoload ini berlaku untuk **semua environment** (local Windows, WSL, Linux server)
+
+---
+
+## Riwayat Pembaruan & Hardening Modul
+
+### Pembaruan Modul Akademik (16 Juni 2026)
+1. **Penyelesaian Modul:**
+   - Modul `Akademik` diselesaikan dengan fitur manajemen Rombel, Mapel, Input Nilai Massal, dan Rapor PDF (menggunakan Barryvdh/DomPDF).
+   - Diaktifkan secara global di `modules_statuses.json` dan didaftarkan pada psr-4 autoload di root `composer.json`.
+2. **Optimasi Platform Composer:**
+   - Dependensi Laravel 11 memerlukan PHP >= 8.3.0, sedangkan CLI Windows default menggunakan PHP 8.2.30.
+   - Solusi: Menjalankan composer secara eksplisit menggunakan binary PHP 8.3:
+     ```bash
+     php83 D:\composer\composer.phar dump-autoload --optimize
+     ```
+3. **REST API Driven & Security Hardening:**
+   - Menambahkan `AkademikApiController` untuk rute API `/api/v1/students/{student}/grades` dan `/api/v1/students/{student}/rapor` bagi Portal Ortu (Next.js).
+   - Menerapkan pembatasan role `wali` hanya dapat mengakses data akademik siswa miliknya sendiri (ownership verification).
+   - Memperkuat validasi lintas tenant pada middleware `IdentifyTenant` & `SetTenantFromUser` (memeriksa kesesuaian user session `tenant_id` dengan subdomain request context).
