@@ -228,39 +228,41 @@ class PitchingDemoSeeder extends Seeder
                 }
 
                 // Grade Details
-                $detailCategories = ['TUGAS', 'HARIAN', 'UTS', 'UAS', 'AKHIR'];
-                foreach ($detailCategories as $cat) {
-                    \App\Models\GradeDetail::firstOrCreate(
-                        [
-                            'tenant_id' => $t1->id,
-                            'student_id' => $student->id,
-                            'subject_id' => $sub->id,
-                            'category' => $cat
-                        ],
-                        [
-                            'title' => match($cat) {
-                                'TUGAS' => 'Tugas Mandiri ' . (($i % 3) + 1),
-                                'HARIAN' => 'Ulangan Harian ' . (($i % 2) + 1),
-                                'UTS' => 'UTS Semester Ganjil',
-                                'UAS' => 'UAS Semester Ganjil',
-                                'AKHIR' => 'Nilai Akhir Rapor'
-                            },
-                            'score' => 70 + ($i % 25),
-                            'weight' => match($cat) {
-                                'TUGAS' => 1.0,
-                                'HARIAN' => 2.0,
-                                'UTS', 'UAS' => 3.0,
-                                'AKHIR' => 0.0
-                            },
-                            'date' => now()->subDays(($i % 30) + 1),
-                            'note' => 'Diserahkan tepat waktu'
-                        ]
-                    );
+                if (\Illuminate\Support\Facades\Schema::hasTable('grade_details')) {
+                    $detailCategories = ['TUGAS', 'HARIAN', 'UTS', 'UAS', 'AKHIR'];
+                    foreach ($detailCategories as $cat) {
+                        \App\Models\GradeDetail::firstOrCreate(
+                            [
+                                'tenant_id' => $t1->id,
+                                'student_id' => $student->id,
+                                'subject_id' => $sub->id,
+                                'category' => $cat
+                            ],
+                            [
+                                'title' => match($cat) {
+                                    'TUGAS' => 'Tugas Mandiri ' . (($i % 3) + 1),
+                                    'HARIAN' => 'Ulangan Harian ' . (($i % 2) + 1),
+                                    'UTS' => 'UTS Semester Ganjil',
+                                    'UAS' => 'UAS Semester Ganjil',
+                                    'AKHIR' => 'Nilai Akhir Rapor'
+                                },
+                                'score' => 70 + ($i % 25),
+                                'weight' => match($cat) {
+                                    'TUGAS' => 1.0,
+                                    'HARIAN' => 2.0,
+                                    'UTS', 'UAS' => 3.0,
+                                    'AKHIR' => 0.0
+                                },
+                                'date' => now()->subDays(($i % 30) + 1),
+                                'note' => 'Diserahkan tepat waktu'
+                            ]
+                        );
+                    }
                 }
             }
 
             // Seed Schedules for the class (once per class)
-            if ($i <= 4) {
+            if ($i <= 4 && \Illuminate\Support\Facades\Schema::hasTable('schedules')) {
                 foreach ($studentSubjects as $idx => $sub) {
                     \App\Models\Schedule::firstOrCreate(
                         [
@@ -279,7 +281,7 @@ class PitchingDemoSeeder extends Seeder
             }
 
             // Seed Violations for some students (multiples of 10)
-            if ($i % 10 === 0) {
+            if ($i % 10 === 0 && \Illuminate\Support\Facades\Schema::hasTable('student_violations')) {
                 \App\Models\StudentViolation::firstOrCreate(
                     [
                         'tenant_id' => $t1->id,
@@ -297,7 +299,7 @@ class PitchingDemoSeeder extends Seeder
             }
 
             // Seed Achievements for some students (multiples of 15)
-            if ($i % 15 === 0) {
+            if ($i % 15 === 0 && \Illuminate\Support\Facades\Schema::hasTable('student_achievements')) {
                 \App\Models\StudentAchievement::firstOrCreate(
                     [
                         'tenant_id' => $t1->id,
@@ -316,25 +318,27 @@ class PitchingDemoSeeder extends Seeder
             }
 
             // Seed Tahfiz Records (all students, 2 records each)
-            $surahs = ['Al-Fatihah', 'An-Nas', 'Al-Falaq', 'Al-Ikhlas'];
-            foreach ([0, 1] as $idx) {
-                \App\Models\TahfizRecord::firstOrCreate(
-                    [
-                        'tenant_id' => $t1->id,
-                        'student_id' => $student->id,
-                        'date' => now()->subDays($idx * 3 + 1),
-                        'surah' => $surahs[$i % 4]
-                    ],
-                    [
-                        'ayah_start' => 1,
-                        'ayah_end' => 5,
-                        'type' => $idx === 0 ? 'ziyadah' : 'murajaah',
-                        'score' => 80 + ($i % 20),
-                        'fluency' => 'lancar',
-                        'note' => 'Makhraj dan tajwid baik',
-                        'recorded_by' => $siti->id
-                    ]
-                );
+            if (\Illuminate\Support\Facades\Schema::hasTable('tahfiz_records')) {
+                $surahs = ['Al-Fatihah', 'An-Nas', 'Al-Falaq', 'Al-Ikhlas'];
+                foreach ([0, 1] as $idx) {
+                    \App\Models\TahfizRecord::firstOrCreate(
+                        [
+                            'tenant_id' => $t1->id,
+                            'student_id' => $student->id,
+                            'date' => now()->subDays($idx * 3 + 1),
+                            'surah' => $surahs[$i % 4]
+                        ],
+                        [
+                            'ayah_start' => 1,
+                            'ayah_end' => 5,
+                            'type' => $idx === 0 ? 'ziyadah' : 'murajaah',
+                            'score' => 80 + ($i % 20),
+                            'fluency' => 'lancar',
+                            'note' => 'Makhraj dan tajwid baik',
+                            'recorded_by' => $siti->id
+                        ]
+                    );
+                }
             }
 
             // Create attendance for today

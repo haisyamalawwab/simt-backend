@@ -14,6 +14,9 @@ class TahfizServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Load module migrations
+        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+
         // Load module views
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'tahfiz');
     }
