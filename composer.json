@@ -46,7 +46,9 @@
             "Modules\\Notification\\": "Modules/Notification/app/",
             "Modules\\Notification\\Database\\Seeders\\": "Modules/Notification/database/seeders/",
             "Modules\\Akademik\\": "Modules/Akademik/app/",
-            "Modules\\Akademik\\Database\\Seeders\\": "Modules/Akademik/database/seeders/"
+            "Modules\\Akademik\\Database\\Seeders\\": "Modules/Akademik/database/seeders/",
+            "Modules\\Tahfiz\\": "Modules/Tahfiz/app/",
+            "Modules\\Tahfiz\\Database\\Seeders\\": "Modules/Tahfiz/database/seeders/"
         }
     },
     "autoload-dev": {
