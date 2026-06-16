@@ -23,6 +23,9 @@ class NotificationModuleTest extends TestCase
     {
         parent::setUp();
 
+        // Seed roles & permissions
+        $this->seed(\Database\Seeders\RolePermissionSeeder::class);
+
         $this->tenant = Tenant::create([
             'name' => 'MTs Notifikasi',
             'domain' => 'mts-notif',
@@ -35,13 +38,20 @@ class NotificationModuleTest extends TestCase
             'active' => true,
         ]);
 
+        // Provision roles for this tenant
+        $roleService = new \App\Services\TenantRoleService();
+        $roleService->provisionForTenant($this->tenant->id);
+
         $this->admin = User::create([
             'tenant_id' => $this->tenant->id,
             'name' => 'Admin Notifikasi',
             'email' => 'admin@notif.mts',
             'phone' => '628000000088',
             'password' => bcrypt('password'),
+            'role_display' => 'admin_sekolah',
+            'is_active' => true,
         ]);
+        $roleService->assignRole($this->admin, 'admin_sekolah', $this->tenant->id);
 
         app(Tenancy::class)->setTenant($this->tenant);
     }

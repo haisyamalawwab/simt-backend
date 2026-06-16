@@ -58,12 +58,7 @@
         @endauth
 
             <main class="p-4 md:p-6 max-w-7xl mx-auto">
-                @if(session('success'))
-                    <div class="mb-4 rounded-md bg-emerald-50 text-emerald-700 px-4 py-3 border border-emerald-200">{{ session('success') }}</div>
-                @endif
-                @if(session('error'))
-                    <div class="mb-4 rounded-md bg-red-50 text-red-700 px-4 py-3 border border-red-200">{{ session('error') }}</div>
-                @endif
+                @include('core::partials.alerts')
                 @yield('content')
             </main>
 

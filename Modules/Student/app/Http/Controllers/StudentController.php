@@ -30,13 +30,13 @@ class StudentController extends Controller
         $students = $query->paginate(50)->withQueryString();
         $classes = SchoolClass::with('schoolYear')->get();
 
-        return view('admin.student.index', compact('students', 'classes'));
+        return view('student::index', compact('students', 'classes'));
     }
 
     public function create(): View
     {
         $classes = SchoolClass::with('schoolYear')->get();
-        return view('admin.student.create', compact('classes'));
+        return view('student::create', compact('classes'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -88,7 +88,7 @@ class StudentController extends Controller
     {
         $classes = SchoolClass::with('schoolYear')->get();
         $student->load('guardians', 'classes');
-        return view('admin.student.edit', compact('student', 'classes'));
+        return view('student::edit', compact('student', 'classes'));
     }
 
     public function update(Request $request, Student $student): RedirectResponse
