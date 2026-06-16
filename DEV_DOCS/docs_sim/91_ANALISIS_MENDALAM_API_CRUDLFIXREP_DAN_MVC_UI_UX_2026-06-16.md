@@ -158,6 +158,12 @@ Untuk fitur real-time seperti WhatsApp log di halaman **WA Connect** dan **WA To
 *   Menggunakan AJAX polling berdurasi 5 detik untuk memuat konten partial (`table-rows` dan `incoming-feed`) ke dalam DOM secara mulus.
 *   Dilengkapi mockup smartphone interaktif yang secara instan memformat teks Markdown editor (EasyMDE) ke dalam balon pesan hijau WhatsApp asli secara real-time.
 
+### D. Portal Orang Tua (Next.js & Prisma Integration)
+Integrasi antarmuka untuk Wali Murid diimplementasikan secara terpisah menggunakan Next.js pada folder **[simt-portalortu](file:///d:/laragon/www/simt-portalortu/)**:
+*   **Otorisasi Sisi Client**: Halaman utama **[page.tsx](file:///d:/laragon/www/simt-portalortu/src/app/page.tsx)** memisahkan antarmuka Parent Portal secara dinamis berdasarkan otentikasi user dan pemilihan data siswa aktif.
+*   **Integrasi Endpoint API**: Mengakses data secara mandiri melalui API internal Next.js seperti **[api/dashboard/route.ts](file:///d:/laragon/www/simt-portalortu/src/app/api/dashboard/route.ts)** (untuk ringkasan kehadiran bulanan, status tagihan, dan pengumuman terpilih) serta **[api/grade-details/route.ts](file:///d:/laragon/www/simt-portalortu/src/app/api/grade-details/route.ts)** (untuk detail rincian nilai tugas, harian, UTS, dan UAS).
+*   **Keamanan Multi-Tenant**: Prisma ORM di sisi portalortu (mengacu pada **[schema.prisma](file:///d:/laragon/www/simt-portalortu/prisma/schema.prisma)**) menyertakan relasi `tenantId` pada tabel-tabel penting untuk memastikan query data siswa, presensi, dan nilai dibatasi secara ketat berdasarkan isolasi penyewa.
+
 ---
 
 ## 5. Kesimpulan & Rekomendasi Standardisasi
